@@ -1,0 +1,46 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ rootNamespace }}Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Inertia\Response as InertiaResponse;
+
+class {{ class }} extends Controller
+{
+    public function index(): InertiaResponse
+    {
+        return inertia();
+    }
+
+    public function create(): InertiaResponse
+    {
+        return inertia();
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        return to_route('/');
+    }
+
+    public function show(string $id): InertiaResponse
+    {
+        return inertia();
+    }
+
+    public function edit(string $id): InertiaResponse
+    {
+        return inertia();
+    }
+
+    public function update(Request $request, string $id): RedirectResponse
+    {
+        return to_route('/');
+    }
+
+    public function destroy(string $id): RedirectResponse
+    {
+        return to_route('/');
+    }
+}

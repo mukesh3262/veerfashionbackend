@@ -1,0 +1,19 @@
+<?php
+
+namespace {{ namespace }};
+
+use Closure;
+
+class {{ class }}
+{
+    public function __construct(public $filters) {}
+
+    public function handle($builder, Closure $next)
+    {
+        if (empty($this->filters)) {
+            return $next($builder);
+        }
+
+        return $next($builder);
+    }
+}
