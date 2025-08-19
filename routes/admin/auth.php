@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SubCategoryController;
 
 Route::get('dashboard', DashboardController::class)->name('dashboard');
@@ -39,6 +40,16 @@ Route::controller(CategoryController::class)->group(function () {
     Route::get('categories/{category}', 'show')->name('categories.show');
     Route::post('categories/{category}', 'update')->name('categories.update');
     Route::delete('categories/{category}', 'destroy')->name('categories.destroy');
+});
+
+Route::controller(ProductController::class)->group(function () {
+    Route::get('products/paginated', 'paginatedProducts')->name('products.paginated');
+    Route::match(['GET', 'POST'], 'products', 'index')->name('products.index');
+    Route::put('products/status/{category}', 'changeStatus')->name('products.change-status');
+    Route::post('products/store', 'store')->name('products.store');
+    Route::get('products/{category}', 'show')->name('products.show');
+    Route::post('products/{category}', 'update')->name('products.update');
+    Route::delete('products/{category}', 'destroy')->name('products.destroy');
 });
 
 Route::prefix('subcategories')->as('subcategories.')->controller(SubCategoryController::class)->group(function () {

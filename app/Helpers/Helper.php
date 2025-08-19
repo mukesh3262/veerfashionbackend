@@ -25,6 +25,12 @@ class Helper
             'category view',
             'category delete',
 
+            'product list',
+            'product add',
+            'product edit',
+            'product view',
+            'product delete',
+
             'cms list',
             'cms add',
             'cms edit',

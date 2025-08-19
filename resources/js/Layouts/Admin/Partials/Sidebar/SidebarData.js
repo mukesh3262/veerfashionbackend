@@ -34,6 +34,19 @@ export default [
         ],
     },
     {
+        name: 'Products',
+        icon: 'fas fa-list',
+        route: 'admin.products.index',
+        active: 'admin.products.*',
+        permission: [
+            Permission.PRODUCT_LIST,
+            Permission.PRODUCT_ADD,
+            Permission.PRODUCT_EDIT,
+            Permission.PRODUCT_VIEW,
+            Permission.PRODUCT_DELETE,
+        ],
+    },
+    {
         name: 'Content Pages',
         icon: 'fas fa-file-circle-plus',
         route: 'admin.content-pages.index',

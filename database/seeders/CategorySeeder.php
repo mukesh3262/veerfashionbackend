@@ -28,11 +28,11 @@ class CategorySeeder extends Seeder
                 'Sunglasses',
                 'Bags',
             ],
-            'Footwear' => [
-                'Formal Shoes',
-                'Casual Shoes',
-                'Sneakers',
-            ],
+            // 'Footwear' => [
+            //     'Formal Shoes',
+            //     'Casual Shoes',
+            //     'Sneakers',
+            // ],
             'Fragrances' => [
                 'Perfumes',
                 'Body Sprays',

@@ -89,9 +89,7 @@ return [
     'module_paths' => [
         'avatars'  => 'public/avatars/',
         'categories'  => 'public/categories/',
-        'provider_certificates'  => 'public/provider_certificates/',
-        'provider_licenses'  => 'public/provider_licenses/',
-        'provider_portfolios'  => 'public/provider_portfolios/',
+        'products'  => 'public/products/',
     ],
 
 ];
