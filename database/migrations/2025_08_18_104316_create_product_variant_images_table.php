@@ -16,7 +16,6 @@ return new class extends Migration
             $table->uuid();
             $table->foreignId('product_variant_id')->constrained()->cascadeOnDelete();
             $table->string('image');
-            $table->boolean('is_default')->default(false);
             $table->timestamps();
         });
     }

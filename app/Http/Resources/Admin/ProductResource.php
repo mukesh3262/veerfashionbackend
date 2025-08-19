@@ -27,6 +27,8 @@ class ProductResource extends JsonResource
             'created_at' => $this->created_at->toIso8601String(),
             'updated_at' => $this->updated_at->toIso8601String(),
             'action' => ['id' => $this->uuid],
+            'product_images' => ProductImageResource::collection($this->whenLoaded('images'))->resolve(),
+            'variants' => ProductVariantsResource::collection($this->whenLoaded('variants'))->resolve(),
         ];
     }
 }

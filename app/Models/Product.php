@@ -14,7 +14,7 @@ class Product extends Model
     protected $table = 'products';
 
     protected $fillable = [
-        'uuid', 'name', 'code', 'description', 'base_price', 'status'
+        'uuid', 'category_id' ,'name', 'code', 'description', 'base_price', 'is_active'
     ];
 
 
@@ -65,5 +65,13 @@ class Product extends Model
     
     public function images() {
         return $this->hasMany(ProductImage::class);
+    }
+
+    /**
+     * Get the category associated with the product.
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }

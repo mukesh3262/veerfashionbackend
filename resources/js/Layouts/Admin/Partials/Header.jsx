@@ -8,9 +8,7 @@ import { toggleSidebar, toggleTheme } from '../../../store/themeConfigSlice';
 import Dropdown from './Dropdown';
 
 const Header = () => {
-    console.log(usePage().props);
     const user = usePage().props.auth.user;
-    console.log('user', user);
     const location = useLocation();
 
     useEffect(() => {

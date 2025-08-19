@@ -87,9 +87,10 @@ return [
     */
 
     'module_paths' => [
-        'avatars'  => 'public/avatars/',
-        'categories'  => 'public/categories/',
-        'products'  => 'public/products/',
+        'avatars'  => 'avatars/',
+        'categories'  => 'categories/',
+        'products'  => 'products/',
+        'products-variants'  => 'products/products-variants/',
     ],
 
 ];

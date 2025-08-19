@@ -15,10 +15,14 @@ return new class extends Migration
             $table->id();
             $table->uuid();
             $table->string('code')->unique();
+
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+                
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('base_price', 10, 2)->nullable(); // optional
-            $table->tinyInteger('status')->default(1); // active/inactive
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

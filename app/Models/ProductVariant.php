@@ -13,7 +13,14 @@ class ProductVariant extends Model
 
     protected $table = 'product_variants';
 
-    protected $guarded = [];
+    protected $fillable = [
+        'product_id',
+        'sku',
+        'brand',
+        'attributes',
+        'price',
+        'stock',
+    ];
 
 
     /**

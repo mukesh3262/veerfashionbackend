@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Product;
 use Database\Seeders\Admin\AdminsTableSeeder;
 use Database\Seeders\Admin\ContentPagesTableSeeder;
 use Database\Seeders\Admin\PermissionsTableSeeder;
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
             ContentPagesTableSeeder::class,
             SettingsTableSeeder::class,
             CategorySeeder::class,
+            ProductSeeder::class,
         ]);
 
         /**

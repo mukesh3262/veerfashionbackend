@@ -16,10 +16,10 @@ class ProductSeeder extends Seeder
         // Example Product
         $product = Product::create([
             'uuid'        => Str::uuid(),
+            'category_id' => 2,
             'name'        => 'Cargo Shorts',
             'description' => 'Tactical cargo shorts for summer',
             'base_price'  => 49.99,
-            'status'      => 1,
         ]);
 
         // Product Images (common gallery)
@@ -27,7 +27,7 @@ class ProductSeeder extends Seeder
             [
                 'uuid'       => Str::uuid(),
                 'product_id' => $product->id,
-                'image'      => 'products/cargo-shorts/main1.jpg',
+                'image'      => 'main1.jpg',
                 'is_default' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -35,7 +35,7 @@ class ProductSeeder extends Seeder
             [
                 'uuid'       => Str::uuid(),
                 'product_id' => $product->id,
-                'image'      => 'products/cargo-shorts/main2.jpg',
+                'image'      => 'main2.jpg',
                 'is_default' => false,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -51,8 +51,8 @@ class ProductSeeder extends Seeder
                 'price'      => 49.99,
                 'stock'      => 50,
                 'images'     => [
-                    'products/cargo-shorts/black1.jpg',
-                    'products/cargo-shorts/black2.jpg'
+                    'black1.jpg',
+                    'black2.jpg'
                 ],
             ],
             [
@@ -62,8 +62,8 @@ class ProductSeeder extends Seeder
                 'price'      => 54.99,
                 'stock'      => 30,
                 'images'     => [
-                    'products/cargo-shorts/blue1.jpg',
-                    'products/cargo-shorts/blue2.jpg'
+                    'blue1.jpg',
+                    'blue2.jpg'
                 ],
             ],
             [
@@ -73,8 +73,8 @@ class ProductSeeder extends Seeder
                 'price'      => 59.99,
                 'stock'      => 20,
                 'images'     => [
-                    'products/cargo-shorts/green1.jpg',
-                    'products/cargo-shorts/green2.jpg'
+                    'green1.jpg',
+                    'green2.jpg'
                 ],
             ]
         ];
@@ -95,7 +95,6 @@ class ProductSeeder extends Seeder
                     'uuid'               => Str::uuid(),
                     'product_variant_id' => $variant->id,
                     'image'              => $img,
-                    'is_default'         => $key === 0, // first image as default
                 ]);
             }
         }

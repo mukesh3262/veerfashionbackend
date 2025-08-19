@@ -127,7 +127,6 @@ export default function CategoryList({
             description: category.description || '',
             category_icon: null,
         });
-
         setEditingCategory(category); // set the category that editing
         setShowCategoryModal(true);
     };

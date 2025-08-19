@@ -23,30 +23,8 @@ export default function ProductList({
     error,
     uuid,
 }) {
-
+    console.log('product', products);
     const { theme } = useSelector((state) => state.themeConfig);
-    const [showProductModal, setShowProductModal] = useState(false);
-    const [editingProduct, setEditingProduct] = useState(null);
-
-    // add category form
-    const {
-        data: productData,
-        setData: setProductData,
-        post: postProduct,
-        errors: productErrors,
-        processing: productProcessing,
-        reset: resetProduct,
-        clearErrors: clearProductErrors,
-    } = useForm({
-        id: '',
-        code: '',
-        name: '',
-        description: '',
-        base_price: '',
-        is_active: true,
-    });
-
-   
     // list category form
     const {
         data,
@@ -63,60 +41,6 @@ export default function ProductList({
         offset: 10,
         page: 1,
     });
-
-    // handle category submit
-    const handleProductSubmit = (e) => {
-        e.preventDefault();
-
-        if (editingProduct) {
-            postProduct(
-                route('admin.products.update', editingProduct?.id),
-                {
-                    forceFormData: true,
-                    preserveScroll: true,
-                    onSuccess: () => {
-                        resetProduct();
-                        clearProductErrors();
-                        setShowProductModal(false);
-                        setEditingProduct(null);
-                    },
-                },
-            );
-        } else {
-            postProduct(route('admin.products.store'), {
-                forceFormData: true,
-                preserveScroll: true,
-                onSuccess: () => {
-                    resetProduct();
-                    clearProductErrors();
-                    setShowProductModal(false);
-                },
-            });
-        }
-    };
-
-    // handle product edit
-    const handleProductEdit = (e, productId) => {
-        const product = products?.data?.find(
-            (item) => item.id === productId,
-        );
-
-        if (!product) {
-            console.warn('Category not found: ', productId);
-            return;
-        }
-
-        setProductData({
-            id: product.id,
-            code: product.code || '',
-            name: product.name || '',
-            description: product.description || '',
-            base_price: product.base_price || '',
-        });
-
-        setEditingProduct(product); // set the product that editing
-        setShowProductModal(true);
-    };
 
     const handleSortChange = debounce((column) => {
         let currentSorting = Object.values(data.sort);
@@ -206,9 +130,9 @@ export default function ProductList({
                 { value: false, label: 'Inactive' },
             ],
         },
-        ...(auth?.permissions?.includes(Permission.CATEGORY_ADD) ||
-        auth?.permissions?.includes(Permission.CATEGORY_VIEW) ||
-        auth?.permissions?.includes(Permission.CATEGORY_DELETE)
+        ...(auth?.permissions?.includes(Permission.PRODUCT_ADD) ||
+        auth?.permissions?.includes(Permission.PRODUCT_VIEW) ||
+        auth?.permissions?.includes(Permission.PRODUCT_DELETE)
             ? [
                   {
                       field: 'action',
@@ -265,17 +189,14 @@ export default function ProductList({
                                 permission={Permission.PRODUCT_ADD}
                             >
                                 <Link
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setShowProductModal((prev) => !prev);
-                                    }}
+                                    href={route('admin.products.create')}
                                     className="btn btn-primary"
                                 >
                                     <FontAwesomeIcon
                                         icon="fas fa-plus"
                                         className="mr-2 text-lg text-white"
                                     />
-                                    Add Product
+                                    Add New
                                 </Link>
                             </CheckAbility>
                            
@@ -299,19 +220,19 @@ export default function ProductList({
                         <Table.Cell field="created_at">
                             {({ value }) => processDate(value)}
                         </Table.Cell>
-
+                    
                         <Table.Cell field="is_active">
                             {({ value }) => (
                                 <Switch
                                     auth={auth}
-                                    permission={Permission.CATEGORY_EDIT}
+                                    permission={Permission.PRODUCT_EDIT}
                                     id={value.id}
                                     isActive={value.isActive}
                                     url={route(
-                                        'admin.categories.change-status',
+                                        'admin.products.change-status',
                                         value.id,
                                     )}
-                                    title={`Are you sure you want to {{ACTION}} this category ?`}
+                                    title={`Are you sure you want to {{ACTION}} this product ?`}
                                 />
                             )}
                         </Table.Cell>
@@ -330,10 +251,11 @@ export default function ProductList({
                                                 Permission.PRODUCT_VIEW,
                                         }}
                                         edit={{
-                                            permission:
-                                                Permission.PRODUCT_EDIT,
-                                            onClick: (e) =>
-                                                handleProductEdit(e, value.id),
+                                            href: route(
+                                                'admin.products.edit',
+                                                value.id,
+                                            ),
+                                            permission: Permission.PRODUCT_EDIT,
                                         }}
                                         destroy={{
                                             href: route(
@@ -353,22 +275,6 @@ export default function ProductList({
                 </div>
             </div>
 
-            {/* Product Modal */}
-            <AddEditProductModal
-                show={showProductModal}
-                onClose={() => {
-                    resetProduct();
-                    clearProductErrors();
-                    setShowProductModal(false);
-                    setEditingProduct(null);
-                }}
-                data={productData}
-                setData={setProductData}
-                errors={productErrors}
-                processing={productProcessing}
-                handleSubmit={handleProductSubmit}
-                editingProduct={editingProduct}
-            />
         </AuthenticatedLayout>
     );
 }

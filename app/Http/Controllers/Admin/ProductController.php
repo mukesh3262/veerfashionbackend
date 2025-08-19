@@ -3,14 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\ProductRequest;
 use App\Http\Resources\Admin\ProductResource;
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Pipelines\Admin\Common\SortPipeline;
 use App\Pipelines\Admin\Product\FilterPipeline;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Response as InertiaResponse;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Str;
+use Throwable;
+use Illuminate\Support\Facades\Storage;
+use DB;
 
 class ProductController extends Controller
 {
@@ -20,7 +27,7 @@ class ProductController extends Controller
 
         $products = app(Pipeline::class)
             ->send(
-                Product::query()
+                Product::query()->with(['variants','images'])
             )
             ->through([
                 new FilterPipeline($request?->filters),
@@ -28,7 +35,7 @@ class ProductController extends Controller
             ])
             ->thenReturn()
             ->paginate(config('utility.pagination.per_page'));
-            
+
         return inertia('Admin/Product/List', [
             'products' => ProductResource::collection($products),
             'pagination' => $products->toArray(),
@@ -40,31 +47,203 @@ class ProductController extends Controller
 
     public function create(): InertiaResponse
     {
-        return inertia();
+        $this->authorize('product add');
+        $categories = Category::with('subcategories')
+            ->whereNull('parent_id')
+            ->get()
+            ->map(function ($category) {
+                return [
+                    'label' => $category->name,
+                    'options' => $category->subcategories->map(function ($subcategory) {
+                        return [
+                            'label' => $subcategory->name,
+                            'value' => $subcategory->id,
+                        ];
+                    })->toArray(),
+                ];
+            })->toArray();
+
+        return inertia('Admin/Product/AddEdit', [
+            'success' => session('success'),
+            'error' => session('error'),
+            'uuid' => session('uuid'),
+            'categories' => $categories
+        ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(ProductRequest $request): RedirectResponse
     {
-        return to_route('/');
+        try {
+            DB::beginTransaction();
+
+            // ✅ Create Product
+            $product = Product::create([
+                'category_id' => $request->category,
+                'name'        => $request->name,
+                'description' => $request->description,
+                'base_price'  => $request->base_price,
+            ]);
+
+            // ✅ Save Product Images
+            if ($request->hasFile('product_images')) {
+                $imagesData = [];
+                foreach ($request->file('product_images') as $index => $image) {
+                    $filename = uniqid('product-') . '.' . $image->getClientOriginalExtension();
+                    Storage::put(config('filesystems.module_paths.products') . $filename, $image->getContent());
+
+                    $imagesData[] = [
+                        'product_id' => $product->id,
+                        'image' => $filename, // only filename
+                        'is_default' => $index === 0 ? 1 : 0, // first image is default
+                    ];
+                }
+                // Bulk insert
+                if (!empty($imagesData)) {
+                    $product->images()->createMany($imagesData);
+                }
+            }
+
+
+            // ✅ Save Variants with Images
+            if ($request->has('variants')) {
+                foreach ($request->variants as $variantData) {
+                    $variant = $product->variants()->create([
+                        'sku'    => $variantData['sku'] ?? null,
+                        'brand'    => $variantData['brand'] ?? null,
+                        'price'  => $variantData['price'] ?? null,
+                        'attributes' => json_encode($variantData['attributes'] ?? null),
+                    ]);
+
+
+                    // Save Variant Images
+                    if (isset($variantData['variant_images'])) {
+                        $variantImagesData = [];
+                        foreach ($variantData['variant_images'] as $variantImage) {
+                            $filename = uniqid('product-variant-') . '.' . $variantImage->getClientOriginalExtension();
+                            Storage::put(config('filesystems.module_paths.products-variants') . $filename, $variantImage->getContent());
+
+                            $variantImagesData[] = [
+                                'product_variant_id' => $variant->id,
+                                'image' => $filename, // only filename
+                                'is_default' => $index === 0 ? 1 : 0, // first image is default
+                            ];
+                        }
+                        // Bulk insert
+                        if (!empty($variantImagesData)) {
+                            $variant->images()->createMany($variantImagesData);
+                        }
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return to_route('admin.products.index')
+                ->with([
+                    'success' => [
+                        'dialog_type' => 'info',
+                        'message'     => __('basecode/admin.created', ['entity' => 'Product']),
+                        'uuid'        => Str::uuid(),
+                    ],
+                ]);
+        } catch (Throwable $th) {
+            DB::rollBack();
+
+            return back()->with([
+                'error' => $th->getMessage(),
+                'uuid'  => Str::uuid(),
+            ]);
+        }
     }
+
 
     public function show(string $id): InertiaResponse
     {
         return inertia();
     }
 
-    public function edit(string $id): InertiaResponse
+    public function edit(Product $product): InertiaResponse
     {
-        return inertia();
+        // Find product or category that is being edited
+        $product = Product::with(['category', 'images', 'variants'])->findOrFail($product->id);
+
+        // Fetch categories with subcategories
+        $categories = Category::with('subcategories')->whereNull('parent_id')->get();
+
+        // Transform into grouped options
+        $formattedCategories = $categories->map(function ($category) {
+            return [
+                'label' => $category->name,
+                'options' => $category->subcategories->map(function ($sub) {
+                    return [
+                        'label' => $sub->name,
+                        'value' => $sub->id,
+                    ];
+                })->toArray(),
+            ];
+        })->toArray();
+
+        // Preselect the assigned category/subcategory
+        $assignedCategory = null;
+        if ($product->category) {
+            $assignedCategory = [
+                'label' => $product->category->name,
+                'value' => $product->category->id,
+            ];
+        }
+
+        return inertia('Admin/Product/AddEdit', [
+            'success'          => session('success'),
+            'error'            => session('error'),
+            'uuid'             => session('uuid'),
+            'categories'       => $formattedCategories,
+            'assignedCategory' => $assignedCategory,
+            'product'          => (new ProductResource($product))->resolve(),
+        ]);
     }
 
     public function update(Request $request, string $id): RedirectResponse
     {
+        dd($request->all());
         return to_route('/');
     }
 
-    public function destroy(string $id): RedirectResponse
+    public function destroy(Product $product): RedirectResponse
     {
-        return to_route('/');
+        $this->authorize('product delete');
+
+        try {
+            $product->delete();
+
+            return to_route('admin.products.index')
+                ->with([
+                    'success' => [
+                        'dialog_type' => 'confirm', // info | confirm
+                        'message' => __('basecode/admin.deleted', ['entity' => 'Product']),
+                    ],
+                    'uuid' => Str::uuid(),
+                ]);
+        } catch (Throwable $th) {
+            return back()->with([
+                'error' => $th->getMessage(),
+                'uuid' => Str::uuid(),
+            ]);
+        }
+    }
+
+
+    public function changeStatus(Request $request, Product $product): RedirectResponse
+    {
+        $this->authorize('product edit');
+        $product->update(['is_active' => !$product->is_active]);
+
+        return back()
+            ->with([
+                'success' => [
+                    'dialog_type' => 'confirm', // info | confirm
+                    'message' => __('basecode/admin.updated', ['entity' => 'Status']),
+                ],
+                'uuid' => Str::uuid(),
+            ]);
     }
 }

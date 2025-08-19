@@ -20,7 +20,6 @@ export default function AddEditCategoryModal({
     editingCategory,
 }) {
     const [selectedCategory, setSelectedCategory] = useState(null);
-
     // set selected category when editing
     useEffect(() => {
         if (editingCategory?.parent_category) {
