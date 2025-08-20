@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Api\V1\Customer\ContentPageController;
-use App\Http\Controllers\Api\V1\Customer\ForgotPasswordController;
-use App\Http\Controllers\Api\V1\Customer\InquiryController;
-use App\Http\Controllers\Api\V1\Customer\LoginController;
-use App\Http\Controllers\Api\V1\Customer\ProductController;
-use App\Http\Controllers\Api\V1\Customer\RegisterController;
-use App\Http\Controllers\Api\V1\Customer\ResetPasswordController;
-use App\Http\Controllers\Api\V1\Customer\SettingController;
+use App\Http\Controllers\Api\V1\ContentPageController;
+use App\Http\Controllers\Api\V1\ForgotPasswordController;
+use App\Http\Controllers\Api\V1\InquiryController;
+use App\Http\Controllers\Api\V1\LoginController;
+use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\RegisterController;
+use App\Http\Controllers\Api\V1\ResetPasswordController;
+use App\Http\Controllers\Api\V1\SettingController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api\V1\Customer;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Action\IssueTokenAction;
 use App\Action\LinkSocialAccountAction;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\V1\Customer\LoginRequest;
+use App\Http\Requests\Api\V1\LoginRequest;
 use App\Http\Requests\Api\V1\RefreshTokenRequest;
 use App\Http\Requests\Api\V1\SocialLoginRequest;
 use App\Http\Resources\Api\V1\UserResource;

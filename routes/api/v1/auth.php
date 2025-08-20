@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Api\V1\Customer\CategoryController;
-use App\Http\Controllers\Api\V1\Customer\DashboardController;
-use App\Http\Controllers\Api\V1\Customer\UserAccountController;
-use App\Http\Controllers\Api\V1\Customer\LoginController;
+use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\DashboardController;
+use App\Http\Controllers\Api\V1\UserAccountController;
+use App\Http\Controllers\Api\V1\LoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(UserAccountController::class)->group(function () {

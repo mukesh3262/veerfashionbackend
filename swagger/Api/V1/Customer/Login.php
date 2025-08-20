@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Swagger\Api\V1\Customer;
+namespace Swagger\Api\V1;
 
 use App\Enums\DeviceTypeEnum;
 use App\Enums\LoginTypeEnum;
