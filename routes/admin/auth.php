@@ -46,13 +46,14 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('products/paginated', 'paginatedProducts')->name('products.paginated');
     Route::match(['GET', 'POST'], 'products', 'index')->name('products.index');
     Route::get('products/create', 'create')->name('products.create');
+    Route::get('products/import', 'import')->name('products.import');
+    Route::post('products/import/store', 'importData')->name('products.import.store');
     Route::put('products/status/{product}', 'changeStatus')->name('products.change-status');
     Route::post('products/store', 'store')->name('products.store');
     Route::get('products/{product}', 'show')->name('products.show');
     Route::post('products/{product}', 'update')->name('products.update');
     Route::delete('products/{product}', 'destroy')->name('products.destroy');
     Route::get('products/{product}/edit', 'edit')->name('products.edit');
-
 });
 
 Route::prefix('subcategories')->as('subcategories.')->controller(SubCategoryController::class)->group(function () {

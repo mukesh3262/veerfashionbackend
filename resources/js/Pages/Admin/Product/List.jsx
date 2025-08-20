@@ -183,6 +183,18 @@ export default function ProductList({
 
                         <div className="flex items-center gap-2">
                             <CheckAbility
+                                    auth={auth}
+                                    permission={Permission.PRODUCT_ADD}
+                                >
+                                <Link
+                                    href={route('admin.products.import')}
+                                    className="btn btn-primary"
+                                >
+                                    Import Products
+                                </Link>
+                            </CheckAbility>
+                            
+                            <CheckAbility
                                 auth={auth}
                                 permission={Permission.PRODUCT_ADD}
                             >

@@ -15,7 +15,7 @@ class SortPipeline
         $sort = $this->sort;
 
         if (empty($sort)) {
-            return $next($builder);
+            return $next($builder->orderByDesc('created_at'));
         }
 
         [$column, $sortBy] = [key($sort), reset($sort)];

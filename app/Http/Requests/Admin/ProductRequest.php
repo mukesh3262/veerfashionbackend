@@ -79,8 +79,8 @@ class ProductRequest extends FormRequest
             ],
             'variants.*.brand'                => [$hasVariants ? 'required' : 'nullable', 'string', 'max:255'],
             'variants.*.price'                => [$hasVariants ? 'required' : 'nullable', 'numeric', 'min:0'],
-            'variants.*.attributes.color'     => [$hasVariants ? 'required' : 'nullable', 'string', 'max:50'],
-            'variants.*.attributes.size'      => [$hasVariants ? 'required' : 'nullable', 'string', 'max:50'],
+            'variants.*.attributes.color'     => ['nullable', 'string', 'max:50'],
+            'variants.*.attributes.size'      => ['nullable', 'string', 'max:50'],
 
             // Variant images
             'variants.*.variant_images'   => ['array', 'max:5'], // only new files
@@ -173,10 +173,10 @@ class ProductRequest extends FormRequest
             'variants.*.price.numeric'  => 'The price must be a valid number.',
             'variants.*.price.min'      => 'The price must be at least 0.',
 
-            'variants.*.attributes.color.required' => 'The color field is required.',
+            // 'variants.*.attributes.color.required' => 'The color field is required.',
             'variants.*.attributes.color.max'      => 'The color may not be greater than 50 characters.',
 
-            'variants.*.attributes.size.required' => 'The size field is required.',
+            // 'variants.*.attributes.size.required' => 'The size field is required.',
             'variants.*.attributes.size.max'      => 'The size may not be greater than 50 characters.',
 
             // Variant images

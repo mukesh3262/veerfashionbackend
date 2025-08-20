@@ -6,9 +6,11 @@ use App\Http\Controllers\Api\V1\Customer\ContentPageController;
 use App\Http\Controllers\Api\V1\Customer\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\Customer\InquiryController;
 use App\Http\Controllers\Api\V1\Customer\LoginController;
+use App\Http\Controllers\Api\V1\Customer\ProductController;
 use App\Http\Controllers\Api\V1\Customer\RegisterController;
 use App\Http\Controllers\Api\V1\Customer\ResetPasswordController;
 use App\Http\Controllers\Api\V1\Customer\SettingController;
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(RegisterController::class)->group(function () {
@@ -39,4 +41,8 @@ Route::controller(ContentPageController::class)->group(function () {
 
 Route::controller(InquiryController::class)->group(function () {
     Route::post('inquiry', 'newInquiry')->name('new-inquiry');
+});
+
+Route::controller(ProductController::class)->group(function () {
+    Route::get('products/filters', 'filters')->name('products.filters');
 });

@@ -80,24 +80,14 @@ if (! function_exists('mapApiRoutes')) {
             ->group(base_path('routes/api/api.php'));
 
         Route::middleware(['api', 'throttle:api', 'api.locale'])
-            ->prefix('api/v1/customer')
+            ->prefix('api/v1')
             ->as('api.')
-            ->group(base_path('routes/api/v1/Customer/guest.php'));
+            ->group(base_path('routes/api/v1/guest.php'));
 
         Route::middleware(['api', 'auth:sanctum', 'throttle:api', 'api.locale'])
-            ->prefix('api/v1/customer')
+            ->prefix('api/v1')
             ->as('api.')
-            ->group(base_path('routes/api/v1/Customer/auth.php'));
-
-        Route::middleware(['api', 'throttle:api', 'api.locale'])
-            ->prefix('api/v1/service-provider')
-            ->as('api.')
-            ->group(base_path('routes/api/v1/ServiceProvider/guest.php'));
-
-        Route::middleware(['api', 'auth:sanctum', 'throttle:api', 'api.locale'])
-            ->prefix('api/v1/service-provider')
-            ->as('api.')
-            ->group(base_path('routes/api/v1/ServiceProvider/auth.php'));
+            ->group(base_path('routes/api/v1/auth.php'));
     }
 }
 

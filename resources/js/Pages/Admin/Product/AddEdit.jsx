@@ -55,8 +55,6 @@ export default function ProductAddEdit({
     }); 
 
 
-    console.log('errors', errors);
-
     const [selectedCategory, setSelectedCategory] = useState(
         assignedCategory ?? null,
     );

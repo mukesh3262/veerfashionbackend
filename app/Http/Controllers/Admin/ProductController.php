@@ -27,7 +27,7 @@ class ProductController extends Controller
 
         $products = app(Pipeline::class)
             ->send(
-                Product::query()->with(['variants','images', 'category'])
+                Product::query()->with(['variants', 'images', 'category'])
             )
             ->through([
                 new FilterPipeline($request?->filters),
@@ -221,7 +221,7 @@ class ProductController extends Controller
                 'description' => $request->description,
                 'category_id' => $request->category,
             ]);
-    
+
             /**
              * ---------------------------
              * ✅ Handle Product Images
@@ -234,8 +234,8 @@ class ProductController extends Controller
                     ->whereIn('uuid', $request->deleted_product_images)
                     ->get();
                 foreach ($images as $product_image) {
-                    if ($product_image->image && Storage::exists(config('filesystems.module_paths.products') .$product_image->image)) {
-                        Storage::delete(config('filesystems.module_paths.products') .$product_image->image);
+                    if ($product_image->image && Storage::exists(config('filesystems.module_paths.products') . $product_image->image)) {
+                        Storage::delete(config('filesystems.module_paths.products') . $product_image->image);
                     }
                 }
                 // Delete DB records
@@ -250,7 +250,7 @@ class ProductController extends Controller
                 foreach ($request->file('product_images') as $index => $image) {
                     $filename = uniqid('product-') . '.' . $image->getClientOriginalExtension();
                     Storage::put(config('filesystems.module_paths.products') . $filename, $image->getContent());
-    
+
                     $imagesData[] = [
                         'product_id' => $product->id,
                         'image'      => $filename,
@@ -261,7 +261,7 @@ class ProductController extends Controller
                     $product->images()->createMany($imagesData);
                 }
             }
-    
+
             /**
              * ---------------------------
              * ✅ Handle Variants
@@ -279,7 +279,7 @@ class ProductController extends Controller
                             'price'      => $variantData['price'] ?? null,
                             'attributes' => json_encode($variantData['attributes'] ?? null),
                         ]);
-    
+
                     if (!empty($variantData['id'])) {
                         $variant->update([
                             'sku'        => $variantData['sku'] ?? null,
@@ -288,7 +288,7 @@ class ProductController extends Controller
                             'attributes' => json_encode($variantData['attributes'] ?? null),
                         ]);
                     }
-    
+
                     // ✅ Handle Variant Images
                     if (!empty($variantData['deleted_variant_images'])) {
 
@@ -296,9 +296,9 @@ class ProductController extends Controller
                             ->whereIn('uuid', $variantData['deleted_variant_images'])
                             ->get();
 
-                         foreach ($images as $variant_image) {
+                        foreach ($images as $variant_image) {
                             if ($variant_image->image && Storage::exists(config('filesystems.module_paths.products-variants'))) {
-                                Storage::delete(config('filesystems.module_paths.products-variants') .$variant_image->image);
+                                Storage::delete(config('filesystems.module_paths.products-variants') . $variant_image->image);
                             }
                         }
                         // Delete DB records
@@ -306,13 +306,13 @@ class ProductController extends Controller
                             ->whereIn('uuid', $variantData['deleted_variant_images'])
                             ->delete();
                     }
-    
+
                     if (!empty($variantData['variant_images'])) {
                         $variantImagesData = [];
                         foreach ($variantData['variant_images'] as $index => $variantImage) {
                             $filename = uniqid('product-variant-') . '.' . $variantImage->getClientOriginalExtension();
                             Storage::put(config('filesystems.module_paths.products-variants') . $filename, $variantImage->getContent());
-    
+
                             $variantImagesData[] = [
                                 'product_variant_id' => $variant->id,
                                 'image'      => $filename,
@@ -325,9 +325,9 @@ class ProductController extends Controller
                     }
                 }
             }
-    
+
             DB::commit();
-    
+
             return to_route('admin.products.index')
                 ->with([
                     'success' => [
@@ -336,17 +336,16 @@ class ProductController extends Controller
                         'uuid'        => Str::uuid(),
                     ],
                 ]);
-    
         } catch (Throwable $th) {
             DB::rollBack();
-    
+
             return back()->with([
                 'error' => $th->getMessage(),
                 'uuid'  => Str::uuid(),
             ]);
         }
     }
-    
+
 
     public function destroy(Product $product): RedirectResponse
     {
@@ -385,5 +384,14 @@ class ProductController extends Controller
                 ],
                 'uuid' => Str::uuid(),
             ]);
+    }
+
+    public function import(): InertiaResponse
+    {
+        return inertia('Admin/Product/Import', [
+            'success' => session('success'),
+            'error' => session('error'),
+            'uuid' => session('uuid'),
+        ]);
     }
 }
