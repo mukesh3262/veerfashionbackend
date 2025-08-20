@@ -30,6 +30,7 @@ class ProductResource extends JsonResource
             'action' => ['id' => $this->uuid],
             'product_images' => ProductImageResource::collection($this->whenLoaded('images'))->resolve(),
             'variants' => ProductVariantsResource::collection($this->whenLoaded('variants'))->resolve(),
+            'category' => CategoryResource::make($this->whenLoaded('category'))->resolve(),
         ];
     }
 }

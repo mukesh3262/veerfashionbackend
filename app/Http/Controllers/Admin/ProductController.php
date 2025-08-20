@@ -27,7 +27,7 @@ class ProductController extends Controller
 
         $products = app(Pipeline::class)
             ->send(
-                Product::query()->with(['variants','images'])
+                Product::query()->with(['variants','images', 'category'])
             )
             ->through([
                 new FilterPipeline($request?->filters),
@@ -157,9 +157,16 @@ class ProductController extends Controller
     }
 
 
-    public function show(string $id): InertiaResponse
+    public function show(Product $product): InertiaResponse
     {
-        return inertia();
+        $product = $product->load(['category', 'images', 'variants']);
+
+        return inertia('Admin/Product/Details', [
+            'product' => (new ProductResource($product))->resolve(),
+            'success' => session('success'),
+            'error' => session('error'),
+            'uuid' => session('uuid'),
+        ]);
     }
 
     public function edit(Product $product): InertiaResponse

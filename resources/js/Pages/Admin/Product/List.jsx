@@ -11,9 +11,8 @@ import { processDate } from '@/utils/admin/dateUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Head, Link, useForm } from '@inertiajs/react';
 import debounce from 'lodash/debounce';
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import AddEditProductModal from './Partial/AddEditProductModal';
+import { formatCurrency } from "@/utils/formatCurrency";
 
 export default function ProductList({
     auth,
@@ -23,7 +22,6 @@ export default function ProductList({
     error,
     uuid,
 }) {
-    console.log('product', products);
     const { theme } = useSelector((state) => state.themeConfig);
     // list category form
     const {
@@ -217,6 +215,9 @@ export default function ProductList({
                         handleFilterChange={handleFilterChange}
                         pagination={pagination}
                     >
+                        <Table.Cell field="base_price">
+                            {({ value }) => <span>{formatCurrency(value)}</span>}
+                        </Table.Cell>
                         <Table.Cell field="created_at">
                             {({ value }) => processDate(value)}
                         </Table.Cell>

@@ -18,7 +18,8 @@ class ProductVariantImageResource extends JsonResource
         return [
             'id' => $this->uuid,
             'product_variant_id' => $this->product_variant_id,
-            'image' => $this->image ? Storage::url(config('filesystems.module_paths.products-variants') . $this->image) : null,
+            'image' => $this->image,
+            'image_url' => $this->image ? Storage::url(config('filesystems.module_paths.products-variants') . $this->image) : null,
         ];
     }
 }

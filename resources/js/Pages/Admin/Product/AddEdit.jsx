@@ -32,7 +32,7 @@ export default function ProductAddEdit({
             existing_variant_images:
                 variant?.variant_images?.map((img) => ({
                     id: img.id,
-                    image: img.image,
+                    image: img.image_url,
                 })) ?? [],
             variant_images: [],
             deleted_variant_images: [],
@@ -48,7 +48,7 @@ export default function ProductAddEdit({
         existing_product_images:
             product?.product_images?.map((img) => ({
                 id: img.id,
-                image: img.image,
+                image: img.image_url,
             })) ?? [],
         product_images: [], // only new files
         deleted_product_images: [], // ids of deleted images
