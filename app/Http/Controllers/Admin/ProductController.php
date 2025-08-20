@@ -202,11 +202,144 @@ class ProductController extends Controller
         ]);
     }
 
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(ProductRequest $request, Product $product): RedirectResponse
     {
-        dd($request->all());
-        return to_route('/');
+        try {
+            DB::beginTransaction();
+
+            // ✅ Update product details
+            $product->update([
+                'name'        => $request->name,
+                'base_price'  => $request->base_price,
+                'description' => $request->description,
+                'category_id' => $request->category,
+            ]);
+    
+            /**
+             * ---------------------------
+             * ✅ Handle Product Images
+             * ---------------------------
+             */
+            // Delete removed images
+            if (isset($request->deleted_product_images) && count($request->deleted_product_images) > 0) {
+                // Get images that will be deleted
+                $images = $product->images()
+                    ->whereIn('uuid', $request->deleted_product_images)
+                    ->get();
+                foreach ($images as $product_image) {
+                    if ($product_image->image && Storage::exists(config('filesystems.module_paths.products') .$product_image->image)) {
+                        Storage::delete(config('filesystems.module_paths.products') .$product_image->image);
+                    }
+                }
+                // Delete DB records
+                $product->images()
+                    ->whereIn('uuid', $request->deleted_product_images)
+                    ->delete();
+            }
+
+            // Save new uploaded images
+            if ($request->hasFile('product_images')) {
+                $imagesData = [];
+                foreach ($request->file('product_images') as $index => $image) {
+                    $filename = uniqid('product-') . '.' . $image->getClientOriginalExtension();
+                    Storage::put(config('filesystems.module_paths.products') . $filename, $image->getContent());
+    
+                    $imagesData[] = [
+                        'product_id' => $product->id,
+                        'image'      => $filename,
+                        'is_default' => $index === 0 ? 1 : 0, // keep first as default if none exists
+                    ];
+                }
+                if (!empty($imagesData)) {
+                    $product->images()->createMany($imagesData);
+                }
+            }
+    
+            /**
+             * ---------------------------
+             * ✅ Handle Variants
+             * ---------------------------
+             */
+            if ($request->has('variants')) {
+                foreach ($request->variants as $variantData) {
+
+                    // Update existing OR create new
+                    $variant = !empty($variantData['id'])
+                        ? $product->variants()->where('uuid', $variantData['id'])->firstOrFail()
+                        : $product->variants()->create([
+                            'sku'        => $variantData['sku'] ?? null,
+                            'brand'      => $variantData['brand'] ?? null,
+                            'price'      => $variantData['price'] ?? null,
+                            'attributes' => json_encode($variantData['attributes'] ?? null),
+                        ]);
+    
+                    if (!empty($variantData['id'])) {
+                        $variant->update([
+                            'sku'        => $variantData['sku'] ?? null,
+                            'brand'      => $variantData['brand'] ?? null,
+                            'price'      => $variantData['price'] ?? null,
+                            'attributes' => json_encode($variantData['attributes'] ?? null),
+                        ]);
+                    }
+    
+                    // ✅ Handle Variant Images
+                    if (!empty($variantData['deleted_variant_images'])) {
+
+                        $images = $variant->images()
+                            ->whereIn('uuid', $variantData['deleted_variant_images'])
+                            ->get();
+
+                         foreach ($images as $variant_image) {
+                            if ($variant_image->image && Storage::exists(config('filesystems.module_paths.products-variants'))) {
+                                Storage::delete(config('filesystems.module_paths.products-variants') .$variant_image->image);
+                            }
+                        }
+                        // Delete DB records
+                        $variant->images()
+                            ->whereIn('uuid', $variantData['deleted_variant_images'])
+                            ->delete();
+                    }
+    
+                    if (!empty($variantData['variant_images'])) {
+                        $variantImagesData = [];
+                        foreach ($variantData['variant_images'] as $index => $variantImage) {
+                            $filename = uniqid('product-variant-') . '.' . $variantImage->getClientOriginalExtension();
+                            Storage::put(config('filesystems.module_paths.products-variants') . $filename, $variantImage->getContent());
+    
+                            $variantImagesData[] = [
+                                'product_variant_id' => $variant->id,
+                                'image'      => $filename,
+                                'is_default' => $index === 0 ? 1 : 0,
+                            ];
+                        }
+                        if (!empty($variantImagesData)) {
+                            $variant->images()->createMany($variantImagesData);
+                        }
+                    }
+                }
+            }
+    
+            DB::commit();
+    
+            return to_route('admin.products.index')
+                ->with([
+                    'success' => [
+                        'dialog_type' => 'info',
+                        'message'     => __('basecode/admin.updated', ['entity' => 'Product']),
+                        'uuid'        => Str::uuid(),
+                    ],
+                ]);
+    
+        } catch (Throwable $th) {
+            DB::rollBack();
+    
+            return back()->with([
+                'error' => $th->getMessage(),
+                'uuid'  => Str::uuid(),
+            ]);
+        }
     }
+    
 
     public function destroy(Product $product): RedirectResponse
     {

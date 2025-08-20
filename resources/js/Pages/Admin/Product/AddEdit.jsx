@@ -21,15 +21,21 @@ export default function ProductAddEdit({
     categories,
     assignedCategory,
 }) {
-
     const { data, setData, post, patch, errors, processing } = useForm({
         id: product?.id ?? '',
         name: product?.name ?? '',
         description: product?.description ?? '',
         base_price: product?.base_price ?? '',
-        variants: product?.variants?.map(variant => ({
+        category: assignedCategory?.value ?? '',
+        variants: product?.variants?.map((variant) => ({
             ...variant,
-            variant_images: variant?.variant_images?.map(img => img.image) ?? []
+            existing_variant_images:
+                variant?.variant_images?.map((img) => ({
+                    id: img.id,
+                    image: img.image,
+                })) ?? [],
+            variant_images: [],
+            deleted_variant_images: [],
         })) ?? [
             {
                 sku: '',
@@ -39,16 +45,23 @@ export default function ProductAddEdit({
                 variant_images: [],
             },
         ],
-        product_images: product?.product_images?.map(img => img.image) ?? [],
-    });
+        existing_product_images:
+            product?.product_images?.map((img) => ({
+                id: img.id,
+                image: img.image,
+            })) ?? [],
+        product_images: [], // only new files
+        deleted_product_images: [], // ids of deleted images
+    }); 
 
-    console.log(data);
+
+    console.log('errors', errors);
+
     const [selectedCategory, setSelectedCategory] = useState(
         assignedCategory ?? null,
     );
 
     const handleSubmit = (e) => {
-
         e.preventDefault();
         if (product?.id) {
             post(route('admin.products.update', product?.id));
@@ -82,9 +95,17 @@ export default function ProductAddEdit({
         updated[index][field] = value;
         setData('variants', updated);
     };
-    const handleVariantImageChange = (index, images) => {
+    const handleVariantImageChange = (index, { files, deleted }) => {
         const updated = [...data.variants];
-        updated[index].variant_images = images;
+
+        if (files !== undefined) {
+            updated[index].variant_images = files; // only new Files[]
+        }
+
+        if (deleted !== undefined) {
+            updated[index].deleted_variant_images = deleted; // array of ids
+        }
+
         setData('variants', updated);
     };
 
@@ -216,10 +237,13 @@ export default function ProductAddEdit({
                                 <InputLabel value="Product Images" required />
                                 <MultiImageUploader
                                     id="product_images_uploader"
-                                    prevImages={data?.product_images ?? []} 
+                                    prevImages={data.existing_product_images}
                                     onImagesChange={(files) =>
                                         setData('product_images', files)
-                                    } 
+                                    }
+                                    onDeletedExistingChange={(ids) =>
+                                        setData('deleted_product_images', ids)
+                                    }
                                     maxImages={3}
                                 />
 
@@ -256,7 +280,11 @@ export default function ProductAddEdit({
                                                 placeholder="Unique SKU"
                                             />
                                             <InputError
-                                                message={errors[`variants.${index}.sku`]}
+                                                message={
+                                                    errors[
+                                                        `variants.${index}.sku`
+                                                    ]
+                                                }
                                                 className="mt-2"
                                             />
                                         </div>
@@ -275,7 +303,11 @@ export default function ProductAddEdit({
                                                 placeholder="Brand name"
                                             />
                                             <InputError
-                                                message={errors[`variants.${index}.brand`]}
+                                                message={
+                                                    errors[
+                                                        `variants.${index}.brand`
+                                                    ]
+                                                }
                                                 className="mt-2"
                                             />
                                         </div>
@@ -299,7 +331,11 @@ export default function ProductAddEdit({
                                                 placeholder="Variant price"
                                             />
                                             <InputError
-                                                message={errors[`variants.${index}.price`]}
+                                                message={
+                                                    errors[
+                                                        `variants.${index}.price`
+                                                    ]
+                                                }
                                                 className="mt-2"
                                             />
                                         </div>
@@ -326,7 +362,11 @@ export default function ProductAddEdit({
                                                 placeholder="e.g. Red"
                                             />
                                             <InputError
-                                                message={errors[`variants.${index}.attributes.color`]}
+                                                message={
+                                                    errors[
+                                                        `variants.${index}.attributes.color`
+                                                    ]
+                                                }
                                                 className="mt-2"
                                             />
                                         </div>
@@ -354,7 +394,11 @@ export default function ProductAddEdit({
                                                 placeholder="e.g. M"
                                             />
                                             <InputError
-                                                message={errors[`variants.${index}.attributes.size`]}
+                                                message={
+                                                    errors[
+                                                        `variants.${index}.attributes.size`
+                                                    ]
+                                                }
                                                 className="mt-2"
                                             />
                                         </div>
@@ -363,17 +407,25 @@ export default function ProductAddEdit({
                                         <InputLabel value="Variant Images" />
 
                                         <MultiImageUploader
-                                            id={`variant_images_uploader.${index}`}
+                                            id={`variant_images_uploader_${index}`}
                                             prevImages={
-                                                variant.variant_images ?? []
+                                                variant.existing_variant_images
                                             }
+                                            // Only new files go here
                                             onImagesChange={(files) =>
                                                 handleVariantImageChange(
                                                     index,
-                                                    files,
+                                                    { files },
                                                 )
                                             }
-                                            maxImages={5} // you can limit per variant (ex. 3 variant_images max)
+                                            // Removed existing IDs go here
+                                            onDeletedExistingChange={(ids) =>
+                                                handleVariantImageChange(
+                                                    index,
+                                                    { deleted: ids },
+                                                )
+                                            }
+                                            maxImages={5}
                                             containerClass="gap-2"
                                             imgClass="!w-[120px] !h-[120px] !rounded-lg"
                                         />
