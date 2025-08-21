@@ -9,20 +9,20 @@ export default [
         permission: Permission.IGNORE,
     },
     
-    {
-        name: 'User Management',
-        icon: 'fas fa-users',
-        route: 'admin.users.index',
-        active: 'admin.users.*',
-        permission: [
-            Permission.USER_LIST,
-            Permission.USER_VIEW,
-            Permission.USER_EDIT,
-        ],
-    },
+    // {
+    //     name: 'User Management',
+    //     icon: 'fas fa-users',
+    //     route: 'admin.users.index',
+    //     active: 'admin.users.*',
+    //     permission: [
+    //         Permission.USER_LIST,
+    //         Permission.USER_VIEW,
+    //         Permission.USER_EDIT,
+    //     ],
+    // },
     {
         name: 'Categories',
-        icon: 'fas fa-list',
+        icon: 'fas fa-folder',
         route: 'admin.categories.index',
         active: 'admin.categories.*',
         permission: [
@@ -35,7 +35,7 @@ export default [
     },
     {
         name: 'Products',
-        icon: 'fas fa-list',
+        icon: 'fas fa-box-open',
         route: 'admin.products.index',
         active: 'admin.products.*',
         permission: [
@@ -46,55 +46,55 @@ export default [
             Permission.PRODUCT_DELETE,
         ],
     },
-    {
-        name: 'Content Pages',
-        icon: 'fas fa-file-circle-plus',
-        route: 'admin.content-pages.index',
-        active: 'admin.content-pages.*',
-        permission: [
-            Permission.CMS_LIST,
-            Permission.CMS_ADD,
-            Permission.CMS_VIEW,
-            Permission.CMS_EDIT,
-            Permission.CMS_DELETE,
-        ],
-    },
+    // {
+    //     name: 'Content Pages',
+    //     icon: 'fas fa-file-circle-plus',
+    //     route: 'admin.content-pages.index',
+    //     active: 'admin.content-pages.*',
+    //     permission: [
+    //         Permission.CMS_LIST,
+    //         Permission.CMS_ADD,
+    //         Permission.CMS_VIEW,
+    //         Permission.CMS_EDIT,
+    //         Permission.CMS_DELETE,
+    //     ],
+    // },
     {
         name: 'Setting',
         isLabel: true,
         associatedMenus: ['app-settings', 'sub-admin-management'], // used to show/hide label based on permission
     },
-    {
-        name: 'App Settings',
-        icon: 'fas fa-cogs',
-        key: 'app-settings',
-        menuItems: [
-            {
-                name: 'Mobile Management',
-                route: 'admin.setting.mobile-version',
-                active: 'admin.setting.mobile-version',
-                permission: [
-                    Permission.MOBILE_CONFIG_LIST,
-                    Permission.MOBILE_CONFIG_EDIT,
-                ],
-            },
-            {
-                name: 'Smtp Configuration',
-                route: 'admin.setting.smtp',
-                active: 'admin.setting.smtp',
-                permission: [
-                    Permission.SMTP_CONFIG_LIST,
-                    Permission.SMTP_CONFIG_EDIT,
-                ],
-            },
-            {
-                name: 'Seeders Management',
-                route: 'admin.setting.seeder',
-                active: 'admin.setting.seeder',
-                permission: [Permission.SEEDER_LIST, Permission.SEEDER_EXECUTE],
-            },
-        ],
-    },
+    // {
+    //     name: 'App Settings',
+    //     icon: 'fas fa-cogs',
+    //     key: 'app-settings',
+    //     menuItems: [
+    //         {
+    //             name: 'Mobile Management',
+    //             route: 'admin.setting.mobile-version',
+    //             active: 'admin.setting.mobile-version',
+    //             permission: [
+    //                 Permission.MOBILE_CONFIG_LIST,
+    //                 Permission.MOBILE_CONFIG_EDIT,
+    //             ],
+    //         },
+    //         {
+    //             name: 'Smtp Configuration',
+    //             route: 'admin.setting.smtp',
+    //             active: 'admin.setting.smtp',
+    //             permission: [
+    //                 Permission.SMTP_CONFIG_LIST,
+    //                 Permission.SMTP_CONFIG_EDIT,
+    //             ],
+    //         },
+    //         {
+    //             name: 'Seeders Management',
+    //             route: 'admin.setting.seeder',
+    //             active: 'admin.setting.seeder',
+    //             permission: [Permission.SEEDER_LIST, Permission.SEEDER_EXECUTE],
+    //         },
+    //     ],
+    // },
     {
         name: 'Sub Admin Management',
         icon: 'fas fa-user-gear',

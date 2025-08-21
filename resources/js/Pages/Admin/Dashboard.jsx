@@ -19,12 +19,12 @@ export default function Dashboard({ auth, data, success, error, uuid }) {
                     {/* Users */}
                     <div className="panel h-full sm:col-span-2 lg:col-span-1">
                         <div className="flex items-center justify-between dark:text-white-light">
-                            <h5 className="text-lg font-semibold">Users</h5>
+                            <h5 className="text-lg font-semibold">Products</h5>
                         </div>
 
                         <div className="my-3 text-3xl font-bold text-[#e95f2b]">
                             <span className="ltr:mr-2 rtl:ml-2">
-                                {data?.usersCount?.totalCount ?? 0}
+                                {data?.productsCount?.totalCount ?? 0}
                             </span>
                         </div>
 
@@ -33,7 +33,7 @@ export default function Dashboard({ auth, data, success, error, uuid }) {
                                 <div>
                                     <div>Active Users</div>
                                     <div className="text-lg text-[#f8538d]">
-                                        {data?.usersCount?.activeCount ?? 0}
+                                        {data?.productsCount?.activeCount ?? 0}
                                     </div>
                                 </div>
                             </div>
@@ -42,7 +42,7 @@ export default function Dashboard({ auth, data, success, error, uuid }) {
                                 <div>
                                     <div>Inactive Users</div>
                                     <div className="text-lg text-[#f8538d]">
-                                        {data?.usersCount?.inactiveCount ?? 0}
+                                        {data?.productsCount?.inactiveCount ?? 0}
                                     </div>
                                 </div>
                             </div>
@@ -52,15 +52,33 @@ export default function Dashboard({ auth, data, success, error, uuid }) {
                     {/* Content Pages */}
                     <div className="panel h-full sm:col-span-2 lg:col-span-1">
                         <div className="flex items-center justify-between dark:text-white-light">
-                            <h5 className="text-lg font-semibold">
-                                Content Pages
-                            </h5>
+                            <h5 className="text-lg font-semibold">Categories</h5>
                         </div>
 
                         <div className="my-3 text-3xl font-bold text-[#e95f2b]">
                             <span className="ltr:mr-2 rtl:ml-2">
-                                {data?.contentPagesCount?.totalCount ?? 0}
+                                {data?.categoriesCount?.totalCount ?? 0}
                             </span>
+                        </div>
+
+                        <div className="grid gap-8 text-sm font-bold text-[#515365] sm:grid-cols-2">
+                            <div>
+                                <div>
+                                    <div>Main Categories</div>
+                                    <div className="text-lg text-[#f8538d]">
+                                        {data?.categoriesCount?.mainCategoriesCount ?? 0}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div>
+                                    <div>Sub Categories</div>
+                                    <div className="text-lg text-[#f8538d]">
+                                        {data?.categoriesCount?.subCategoriesCount ?? 0}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

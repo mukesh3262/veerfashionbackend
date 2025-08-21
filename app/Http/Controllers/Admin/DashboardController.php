@@ -17,7 +17,7 @@ class DashboardController extends Controller
     public function __invoke(Request $request): InertiaResponse
     {
         try {
-            $usersCount = User::query()
+            $productsCount = \App\Models\Product::query()
                 ->selectRaw('
                     COUNT(*) as totalCount,
                     SUM(CASE WHEN is_active = ? THEN 1 ELSE 0 END) as activeCount,
@@ -26,17 +26,17 @@ class DashboardController extends Controller
                 ->first()
                 ->toArray();
 
-            $contentPagesCount = ContentPage::query()
+            $categoriesCount = \App\Models\Category::query()
                 ->selectRaw('
                     COUNT(*) as totalCount,
-                    SUM(CASE WHEN is_active = ? THEN 1 ELSE 0 END) as activeCount,
-                    SUM(CASE WHEN is_active = ? THEN 1 ELSE 0 END) as inactiveCount
-                ', [1, 0])
+                    SUM(CASE WHEN parent_id IS NULL THEN 1 ELSE 0 END) as mainCategoriesCount,
+                    SUM(CASE WHEN parent_id IS NOT NULL THEN 1 ELSE 0 END) as subCategoriesCount
+                ')
                 ->first()
                 ->toArray();
 
             return inertia('Admin/Dashboard', [
-                'data' => compact('usersCount', 'contentPagesCount'),
+                'data' => compact('productsCount', 'categoriesCount'),
                 'success' => __('basecode/admin.retrieved', ['Entity' => 'Dashboard Data']),
                 'uuid' => Str::uuid(),
             ]);
