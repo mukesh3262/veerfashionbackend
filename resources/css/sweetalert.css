@@ -263,3 +263,14 @@
 .sweet-alerts.swal2-popup .swal2-title {
     @apply ltr:!pr-6 rtl:!pl-6;
 }
+
+/* Toast notification adjustments */
+.swal2-popup.swal2-toast {
+    min-width: 350px !important;
+    width: auto !important;
+}
+ 
+.swal2-popup.swal2-toast .swal2-title {
+    font-size: 16px !important;
+}
+ 

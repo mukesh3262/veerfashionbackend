@@ -16,8 +16,8 @@ class CategoryController extends Controller
                 'categories' => CategoryResource::collection($categories),
                 'pagination' => [
                     'total' => $categories->total(),
-                    'per_page' => $categories->perPage(),
                     'current_page' => $categories->currentPage(),
+                    'per_page' => $categories->perPage(),
                     'last_page' => $categories->lastPage(),
                 ]
             ]

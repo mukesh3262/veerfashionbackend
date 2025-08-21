@@ -3,27 +3,78 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\V1\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Pipeline\Pipeline;
+use App\Models\Product;
+use App\Pipelines\Admin\Common\SortPipeline;
+use App\Pipelines\Admin\Product\FilterPipeline;
+use App\Http\Resources\Api\V1\ProductResource;
+use App\Pipelines\Api\V1\Product\CategoryPipeline;
+use App\Pipelines\Api\V1\Product\PriceFilterPipeline;
+use App\Pipelines\Api\V1\Product\SearchPipeline;
+
+use Google\Service\CustomSearchAPI\Search;
 
 class ProductController extends Controller
 {
     public function filters(){
 
-        
-        dd('here');
-        $categories = Category::mainCategories()->paginate(config('utility.pagination.per_page'));
+        $categories = Category::with('subcategories')
+            ->whereNull('parent_id')
+            ->get()
+            ->map(function ($category) {
+                return [
+                    'label' => $category->name,
+                    'options' => $category->subcategories->map(function ($subcategory) {
+                        return [
+                            'label' => $subcategory->name,
+                            'value' => $subcategory->id,
+                        ];
+                    })->toArray(),
+                ];
+            })->toArray();
+
         return response()->json([
-            'data' => [
-                'categories' => CategoryResource::collection($categories),
-                'pagination' => [
-                    'total' => $categories->total(),
-                    'per_page' => $categories->perPage(),
-                    'current_page' => $categories->currentPage(),
-                    'last_page' => $categories->lastPage(),
-                ]
-            ]
+            'data' => $categories
+        ]);
+    }
+
+    public function products(Request $request)
+    {
+        $products = app(Pipeline::class)
+            ->send(
+                Product::query()->where('is_active', true)
+                    ->with(['variants', 'images', 'category'])
+            )
+            ->through([
+                new SearchPipeline($request?->search ?? null),
+                new CategoryPipeline($request?->category_id ?? null),
+                new PriceFilterPipeline($request?->price_min ?? null, $request?->price_max ?? null),
+            ])
+            ->thenReturn()
+            ->paginate(config('utility.pagination.per_page'));
+    
+        return response()->json([
+            'data' => ProductResource::collection($products),
+            'pagination' => [
+                'total' => $products->total(),
+                'current_page' => $products->currentPage(),
+                'per_page' => $products->perPage(),
+                'last_page' => $products->lastPage(),
+            ],
+        ]);
+    }
+
+    public function newArrival(){
+        $products = Product::where('is_active', true)
+            ->with(['variants', 'images', 'category'])
+            ->orderBy('created_at', 'desc')
+            ->limit(6)
+            ->get();
+            
+        return response()->json([
+            'data' => ProductResource::collection($products),
         ]);
     }
 }

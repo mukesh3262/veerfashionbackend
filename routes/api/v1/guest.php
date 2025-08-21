@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\ContentPageController;
 use App\Http\Controllers\Api\V1\ForgotPasswordController;
 use App\Http\Controllers\Api\V1\InquiryController;
@@ -10,7 +11,6 @@ use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\RegisterController;
 use App\Http\Controllers\Api\V1\ResetPasswordController;
 use App\Http\Controllers\Api\V1\SettingController;
-use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(RegisterController::class)->group(function () {
@@ -45,4 +45,11 @@ Route::controller(InquiryController::class)->group(function () {
 
 Route::controller(ProductController::class)->group(function () {
     Route::get('products/filters', 'filters')->name('products.filters');
+    Route::post('products/list', 'products')->name('products.list');
+    Route::get('products/new-arrival', 'newArrival')->name('products.new-arrival');
 });
+
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('category/list', 'categories')->name('category.list');
+});
+
