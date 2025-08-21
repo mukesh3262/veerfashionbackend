@@ -54,7 +54,7 @@ export default function AddEditCategoryModal({
 
                     <form onSubmit={handleSubmit}>
                         {/* Category Icon Uploader */}
-                        <div className="flex flex-col items-center">
+                        <div className="flex w-full flex-col items-center">
                             <InputLabel
                                 htmlFor="category_icon"
                                 value="Icon"
@@ -66,16 +66,15 @@ export default function AddEditCategoryModal({
                                 onImageChange={(file) =>
                                     setData('category_icon', file)
                                 }
-                                uploadImgClass="!w-[200px] !h-[150px] !rounded-lg !border-solid"
-                                prevImgClass="!w-[200px] !h-[150px] !rounded-lg !border-solid"
-                                containerClass="w-full"
+                                containerClass="w-full max-w-xs aspect-square border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden"
+                                uploadImgClass="w-full h-full object-cover"
+                                prevImgClass="w-full h-full object-cover"
                             />
                             <InputError
                                 message={errors.category_icon}
                                 className="mt-2"
                             />
                         </div>
-
                         {/* Parent Category */}
                         {Object.keys(data).includes('parent_id') && (
                             <div className="mb-3">

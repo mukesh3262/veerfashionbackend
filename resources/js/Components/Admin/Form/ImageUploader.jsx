@@ -47,45 +47,43 @@ export default forwardRef(function ImageUploader(
     };
 
     return (
-        <div className={`flex items-center justify-center ${containerClass}`}>
-            <div className={`relative`}>
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    style={{ display: 'none' }}
-                    id={props.id ?? id}
-                    {...props}
-                    ref={localRef}
-                />
-                <label htmlFor={props.id ?? id} className="cursor-pointer">
-                    {image ? (
-                        <div className="relative">
-                            <img
-                                src={image}
-                                alt="Preview"
-                                className={`h-20 w-20 rounded-full border-2 border-gray-300 object-fill md:h-24 md:w-24 lg:h-28 lg:w-28 ${prevImgClass}`}
-                            />
-                            {/* Pencil icon */}
-                            <FontAwesomeIcon
-                                icon="fas fa-pencil"
-                                className="absolute bottom-1 right-1 cursor-pointer rounded-full border border-gray-300 bg-white p-1 text-gray-500"
-                            />
-                        </div>
-                    ) : (
-                        <div
-                            className={`relative flex h-20 w-20 items-center justify-center rounded-full border-2 border-dashed border-gray-300 text-center text-gray-500 md:h-24 md:w-24 lg:h-28 lg:w-28 ${uploadImgClass}`}
-                        >
-                            <span>Click to upload image</span>
-                            {/* Pencil icon */}
-                            <FontAwesomeIcon
-                                icon="fas fa-pencil"
-                                className="absolute bottom-1 right-1 cursor-pointer rounded-full border border-gray-300 bg-white p-1 text-gray-500"
-                            />
-                        </div>
-                    )}
-                </label>
-            </div>
+        <div className={`relative ${containerClass}`}>
+            {/* Hidden input */}
+            <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                style={{ display: 'none' }}
+                id={props.id ?? id}
+                {...props}
+                ref={localRef}
+            />
+
+            {/* Full clickable area */}
+            <label
+                htmlFor={props.id ?? id}
+                className="cursor-pointer w-full h-full flex items-center justify-center"
+            >
+                {image ? (
+                    <div className="relative w-full h-full">
+                        <img
+                            src={image}
+                            alt="Preview"
+                            className={`w-full h-full object-cover ${prevImgClass}`}
+                        />
+                        <FontAwesomeIcon
+                            icon="fas fa-pencil"
+                            className="absolute bottom-2 right-2 cursor-pointer rounded-full border border-gray-300 bg-white p-2 text-gray-500"
+                        />
+                    </div>
+                ) : (
+                    <div
+                        className={`w-full h-full flex items-center justify-center text-gray-500 ${uploadImgClass}`}
+                    >
+                        <span>Click to upload image</span>
+                    </div>
+                )}
+            </label>
         </div>
     );
 });

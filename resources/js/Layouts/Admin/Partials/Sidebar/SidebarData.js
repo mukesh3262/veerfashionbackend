@@ -46,6 +46,19 @@ export default [
             Permission.PRODUCT_DELETE,
         ],
     },
+    {
+        name: 'Banners',
+        icon: 'fas fa-bullhorn',
+        route: 'admin.banners.index',
+        active: 'admin.banners.*',
+        permission: [
+            Permission.BANNER_LIST,
+            Permission.BANNER_ADD,
+            Permission.BANNER_EDIT,
+            Permission.BANNER_VIEW,
+            Permission.BANNER_DELETE,
+        ],
+    },
     // {
     //     name: 'Content Pages',
     //     icon: 'fas fa-file-circle-plus',

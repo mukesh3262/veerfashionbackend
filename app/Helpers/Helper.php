@@ -31,6 +31,12 @@ class Helper
             'product view',
             'product delete',
 
+            'banner list',
+            'banner add',
+            'banner edit',
+            'banner view',
+            'banner delete',
+
             'cms list',
             'cms add',
             'cms edit',

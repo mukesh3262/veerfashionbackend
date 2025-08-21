@@ -91,6 +91,7 @@ return [
         'categories'  => 'categories/',
         'products'  => 'products/',
         'products-variants'  => 'products/products-variants/',
+        'banners'  => 'banners/',
     ],
 
 ];

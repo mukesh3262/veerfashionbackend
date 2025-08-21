@@ -47,4 +47,10 @@ export const Permission = {
     PRODUCT_EDIT: 'product edit',
     PRODUCT_VIEW: 'product view',
     PRODUCT_DELETE: 'product delete',
+
+    BANNER_LIST: 'banner list',
+    BANNER_ADD: 'banner add',
+    BANNER_EDIT: 'banner edit',
+    BANNER_VIEW: 'banner view',
+    BANNER_DELETE: 'banner delete',
 };

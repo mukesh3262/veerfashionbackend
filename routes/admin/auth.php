@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Admin\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Admin\Auth\PasswordController;
 use App\Http\Controllers\Admin\Auth\VerifyEmailController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ContentPageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PermissionController;
@@ -55,6 +56,19 @@ Route::controller(ProductController::class)->group(function () {
     Route::delete('products/{product}', 'destroy')->name('products.destroy');
     Route::get('products/{product}/edit', 'edit')->name('products.edit');
 });
+
+Route::controller(BannerController::class)->group(function () {
+    Route::get('banners/paginated', 'paginatedBanners')->name('banners.paginated');
+    Route::match(['GET', 'POST'], 'banners', 'index')->name('banners.index');
+    Route::get('banners/create', 'create')->name('banners.create');
+    Route::put('banners/status/{product}', 'changeStatus')->name('banners.change-status');
+    Route::post('banners/store', 'store')->name('banners.store');
+    Route::get('banners/{product}', 'show')->name('banners.show');
+    Route::post('banners/{product}', 'update')->name('banners.update');
+    Route::delete('banners/{product}', 'destroy')->name('banners.destroy');
+    Route::get('banners/{product}/edit', 'edit')->name('banners.edit');
+});
+
 
 Route::prefix('subcategories')->as('subcategories.')->controller(SubCategoryController::class)->group(function () {
     Route::post('/', 'index')->name('index');
