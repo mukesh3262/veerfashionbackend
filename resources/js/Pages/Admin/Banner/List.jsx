@@ -11,6 +11,7 @@ import { processDate } from '@/utils/admin/dateUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import debounce from 'lodash/debounce';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function BannerList({
@@ -21,7 +22,6 @@ export default function BannerList({
     error,
     uuid,
 }) {
-
     const { theme } = useSelector((state) => state.themeConfig);
 
     const {
@@ -80,7 +80,7 @@ export default function BannerList({
     };
 
     const cols = [
-        { field: 'serial', title: '#', sort: false, filter: false },
+        { field: 'sr_no', title: 'Sr No', sort: false, filter: false },
         {
             field: 'title',
             title: 'Title',
@@ -88,15 +88,15 @@ export default function BannerList({
             filter: true,
             type: 'string',
         },
-        
+
         {
             field: 'image_url',
             title: 'Image',
-            sort: true,
-            filter: true,
+            sort: false,
+            filter: false,
             type: 'string',
         },
-        
+
         {
             field: 'created_at',
             title: 'Created At',
@@ -157,10 +157,7 @@ export default function BannerList({
             <Head title="Banners List" />
 
             <Breadcrumb
-                breadcrumbs={[
-                    { to: '#', label: 'Banners' },
-                    { label: 'List' },
-                ]}
+                breadcrumbs={[{ to: '#', label: 'Banners' }, { label: 'List' }]}
             />
 
             <div className="pt-5">
@@ -203,15 +200,40 @@ export default function BannerList({
                         handleFilterChange={handleFilterChange}
                         pagination={pagination}
                     >
-
                         <Table.Cell field="image_url">
-                            {({ value }) => (
-                                <img
-                                    src={value}
-                                    alt="banner"
-                                    className="h-20 w-40 object-cover"
-                                />
-                            )}
+                            {({ value }) => {
+                                // To show image without preview
+                                // <img
+                                //     src={value}
+                                //     alt="banner"
+                                //     className="h-20 w-40 object-cover"
+                                // />
+                                const [open, setOpen] = useState(false);
+
+                                return (
+                                    <>
+                                        <img
+                                            src={value}
+                                            alt="banner"
+                                            className="h-20 w-40 cursor-pointer rounded-md object-cover shadow"
+                                            onClick={() => setOpen(true)}
+                                        />
+
+                                        {open && (
+                                            <div
+                                                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
+                                                onClick={() => setOpen(false)}
+                                            >
+                                                <img
+                                                    src={value}
+                                                    alt="banner preview"
+                                                    className="max-h-[90%] max-w-[90%] rounded-lg shadow-lg"
+                                                />
+                                            </div>
+                                        )}
+                                    </>
+                                );
+                            }}
                         </Table.Cell>
                         <Table.Cell field="created_at">
                             {({ value }) => processDate(value)}

@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Response as FacadesResponse;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 
 class BannerRequest extends FormRequest
 {
@@ -25,8 +24,9 @@ class BannerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+            'title' => ['required'],
+            'image' => [Rule::requiredIf(!$this->id), 'nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
+            'is_active' => ['boolean']
         ];
     }
    

@@ -241,6 +241,26 @@ export default function Table({
                             data.map((row, rowIndex) => (
                                 <tr key={rowIndex}>
                                     {headerData.map((col, colIndex) => {
+                                        let fieldValue;
+                                        // Handle 'sr_no' separately
+                                        if (col.field === 'sr_no') {
+                                            fieldValue =
+                                                (pagination.current_page - 1) *
+                                                    pagination.per_page +
+                                                (rowIndex + 1);
+                                        } else if (col.field.includes('.')) {
+                                            // Safely access nested properties
+                                            fieldValue = col.field
+                                                .split('.')
+                                                .reduce(
+                                                    (acc, key) => acc?.[key],
+                                                    row,
+                                                );
+                                        } else {
+                                            // Direct access for non-nested fields
+                                            fieldValue = row[col.field];
+                                        }
+
                                         const child = React.Children.toArray(
                                             children,
                                         ).find(
@@ -250,18 +270,19 @@ export default function Table({
                                         );
 
                                         return (
-                                            <td key={colIndex}>
+                                            <td
+                                                key={colIndex}
+                                                className="max-w-xs whitespace-normal"
+                                            >
                                                 {child
                                                     ? React.cloneElement(
                                                           child,
                                                           {
-                                                              value: row[
-                                                                  col.field
-                                                              ],
+                                                              value: fieldValue,
                                                               row,
                                                           },
                                                       )
-                                                    : row[col.field]}
+                                                    : fieldValue}
                                             </td>
                                         );
                                     })}

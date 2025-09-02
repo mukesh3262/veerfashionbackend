@@ -18,7 +18,8 @@ class Banner extends Model
         'is_active',
     ];
 
-
+    const ACTIVE = 1;
+    const IN_ACTIVE = 0;
     /**
      * Returns an array of unique identifiers for the model.
      *

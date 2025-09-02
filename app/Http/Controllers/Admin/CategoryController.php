@@ -98,7 +98,6 @@ class CategoryController extends Controller
 
         try {
             $updateData = $request->validated();
-
             // Category icon
             if ($request->hasFile('category_icon')) {
                 // Remove previous image
@@ -113,6 +112,7 @@ class CategoryController extends Controller
             }
 
             // Update category
+
             $category->update($updateData);
 
             return to_route('admin.categories.index')

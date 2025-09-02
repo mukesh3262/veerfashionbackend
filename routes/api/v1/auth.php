@@ -25,8 +25,3 @@ Route::controller(LoginController::class)->group(function () {
 });
 
 Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-
-Route::controller(CategoryController::class)->group(function () {
-    Route::get('categories', 'categories')->name('categories');
-    Route::get('category/{category}/sub-categories', 'subCategories')->name('category.sub-categories');
-});

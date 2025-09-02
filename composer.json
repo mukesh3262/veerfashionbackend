@@ -13,6 +13,8 @@
         "darkaonline/l5-swagger": "^8.6",
         "google/apiclient": "^2.18",
         "inertiajs/inertia-laravel": "^2.0",
+        "intervention/image": "^3.11",
+        "intervention/image-laravel": "^1.5",
         "laravel/framework": "^11.37",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10",

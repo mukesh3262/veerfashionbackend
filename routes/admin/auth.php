@@ -61,12 +61,12 @@ Route::controller(BannerController::class)->group(function () {
     Route::get('banners/paginated', 'paginatedBanners')->name('banners.paginated');
     Route::match(['GET', 'POST'], 'banners', 'index')->name('banners.index');
     Route::get('banners/create', 'create')->name('banners.create');
-    Route::put('banners/status/{product}', 'changeStatus')->name('banners.change-status');
+    Route::put('banners/status/{banner}', 'changeStatus')->name('banners.change-status');
     Route::post('banners/store', 'store')->name('banners.store');
-    Route::get('banners/{product}', 'show')->name('banners.show');
-    Route::post('banners/{product}', 'update')->name('banners.update');
-    Route::delete('banners/{product}', 'destroy')->name('banners.destroy');
-    Route::get('banners/{product}/edit', 'edit')->name('banners.edit');
+    Route::get('banners/{banner}', 'show')->name('banners.show');
+    Route::post('banners/{banner}', 'update')->name('banners.update');
+    Route::delete('banners/{banner}', 'destroy')->name('banners.destroy');
+    Route::get('banners/{banner}/edit', 'edit')->name('banners.edit');
 });
 
 

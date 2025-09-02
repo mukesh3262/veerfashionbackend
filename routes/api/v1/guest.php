@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\V1\BannerController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\ContentPageController;
 use App\Http\Controllers\Api\V1\ForgotPasswordController;
@@ -53,3 +54,9 @@ Route::controller(CategoryController::class)->group(function () {
     Route::get('category/list', 'categories')->name('category.list');
 });
 
+Route::get('banners', [BannerController::class, 'banners'])->name('banners');
+
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('categories', 'categories')->name('categories');
+    Route::get('category/{category}/sub-categories', 'subCategories')->name('category.sub-categories');
+});

@@ -6,6 +6,7 @@ namespace App\Helpers;
 
 use App\Models\Role;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Intervention\Image\Laravel\Facades\Image;
 
 class Helper
 {
@@ -104,5 +105,14 @@ class Helper
         $string = (string) (mt_rand(0, (int) str_repeat('9', $digit)));
 
         return mb_str_pad($string, $digit, '0', STR_PAD_LEFT);
+    }
+
+    public static function compressImage($file , $quality = 70)
+    {
+        return Image::read($file)
+            ->encodeByExtension(
+                $file->getClientOriginalExtension(),
+                quality: $quality // compression %
+            );
     }
 }
