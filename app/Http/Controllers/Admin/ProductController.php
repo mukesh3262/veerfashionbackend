@@ -261,13 +261,12 @@ class ProductController extends Controller
                     $product->images()->createMany($imagesData);
                 }
             }
-
             /**
              * ---------------------------
              * ✅ Handle Variants
              * ---------------------------
              */
-            if ($request->has('variants')) {
+            if (!empty($request->variants)) {
                 foreach ($request->variants as $variantData) {
 
                     // Update existing OR create new
@@ -324,6 +323,8 @@ class ProductController extends Controller
                         }
                     }
                 }
+            }else{
+                $product->variants()->delete();
             }
 
             DB::commit();

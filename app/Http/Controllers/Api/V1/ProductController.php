@@ -47,7 +47,7 @@ class ProductController extends Controller
         $products = app(Pipeline::class)
             ->send(
                 Product::query()->where('is_active', true)
-                    ->with(['variants', 'images', 'category'])
+                    ->with(['variants', 'images', 'category'])->orderByDesc('created_at')
             )
             ->through([
                 new SearchPipeline($request?->search ?? null),
@@ -55,7 +55,7 @@ class ProductController extends Controller
                 new PriceFilterPipeline($request?->price_min ?? null, $request?->price_max ?? null),
             ])
             ->thenReturn()
-            ->paginate(config('utility.pagination.per_page'));
+            ->paginate(12);
     
         return response()->json([
             'data' => ProductResource::collection($products),
