@@ -18,11 +18,14 @@ export default function BannerAddEdit({
     const { data, setData, post, patch, errors, processing } = useForm({
         id: banner?.id ?? '',
         title: banner?.title ?? '',
+        subtitle: banner?.subtitle ?? '',
+        description: banner?.description ?? '',
+        position: banner?.position ?? 'right',
+        href: banner?.href ?? '',
         image: '',
         image_url: banner?.image_url ?? '',
         is_active: banner?.is_active.isActive ?? 1,
     });
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (banner?.id) {
@@ -80,35 +83,82 @@ export default function BannerAddEdit({
                                     className="mt-2"
                                 />
                             </div>
-                        </div>
 
-                        {/* Banne Image */}
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            {/* Subtitle */}
                             <div className="mb-3">
                                 <InputLabel
-                                    htmlFor="image"
-                                    value="Banner Image"
-                                    required
+                                    htmlFor="subtitle"
+                                    value="Subtitle"
                                 />
-                                <ImageUploader
-                                    id="image"
-                                    prevImage={banner?.image_url}
-                                    onImageChange={(file) =>
-                                        setData('image', file)
+                                <TextInput
+                                    id="subtitle"
+                                    name="subtitle"
+                                    value={data.subtitle}
+                                    onChange={(e) =>
+                                        setData('subtitle', e.target.value)
                                     }
-                                    containerClass="w-full aspect-[16/6] border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden"
-                                    uploadImgClass="w-full h-full object-cover"
-                                    prevImgClass="w-full h-full object-cover"
-                                />
-                                <InputError
-                                    message={errors.image}
-                                    className="mt-2"
+                                    placeholder="Enter banner subtitle"
                                 />
                             </div>
                         </div>
 
-                        {/* ================= Active / Inactive ================= */}
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div className="mb-3">
+                                <InputLabel
+                                    htmlFor="description"
+                                    value="Description"
+                                />
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    value={data.description}
+                                    onChange={(e) =>
+                                        setData('description', e.target.value)
+                                    }
+                                    placeholder="Enter banner description"
+                                    className="w-full rounded-lg border border-gray-300 p-2 text-sm"
+                                />
+                            </div>
+
+                            <div className="mb-3">
+                                <InputLabel
+                                    htmlFor="position"
+                                    value="Position"
+                                    required
+                                />
+                                <select
+                                    id="position"
+                                    name="position"
+                                    value={data.position}
+                                    onChange={(e) =>
+                                        setData('position', e.target.value)
+                                    }
+                                    className="w-full rounded-lg border border-gray-300 p-2 text-sm"
+                                >
+                                    <option value="right">Right</option>
+                                    <option value="left">Left</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                             
+                            <div className="mb-3">
+                                <InputLabel
+                                    htmlFor="href"
+                                    value="Link"
+                                />
+                                <TextInput
+                                    id="href"
+                                    name="href"
+                                    value={data.href}
+                                    onChange={(e) =>
+                                        setData('href', e.target.value)
+                                    }
+                                     placeholder="Enter banner button link (e.g. /collections)"
+                                />
+                            </div>
+
                             <div className="mb-3">
                                 <InputLabel
                                     htmlFor="is_active"
@@ -130,8 +180,28 @@ export default function BannerAddEdit({
                                     <option value={1}>Active</option>
                                     <option value={0}>Inactive</option>
                                 </select>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                             <div className="mb-3">
+                                <InputLabel
+                                    htmlFor="image"
+                                    value="Banner Image"
+                                    required
+                                />
+                                <ImageUploader
+                                    id="image"
+                                    prevImage={banner?.image_url}
+                                    onImageChange={(file) =>
+                                        setData('image', file)
+                                    }
+                                    containerClass="w-full aspect-[16/6] border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden"
+                                    uploadImgClass="w-full h-full object-cover"
+                                    prevImgClass="w-full h-full object-cover"
+                                />
                                 <InputError
-                                    message={errors.is_active}
+                                    message={errors.image}
                                     className="mt-2"
                                 />
                             </div>

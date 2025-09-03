@@ -118,7 +118,8 @@ class BannerController extends Controller
     {
         $this->authorize('banner edit');
         try {
-            $updateData = array_filter($request->validated(), 'strlen');
+
+            $updateData = $request->validated();
             if ($request->hasFile('image')) {
 
                 $filename = uniqid('banner-') . '.' . $request->image->getClientOriginalExtension();
@@ -132,8 +133,10 @@ class BannerController extends Controller
                 }
 
                 $updateData['image'] = $filename;
+            }else{
+                unset($updateData['image']);
             }
-
+            
             // Update banner
             $banner->update($updateData);
 

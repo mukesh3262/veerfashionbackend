@@ -79,12 +79,12 @@ if (! function_exists('mapApiRoutes')) {
             ->as('api.')
             ->group(base_path('routes/api/api.php'));
 
-        Route::middleware(['api', 'throttle:api', 'api.locale'])
+        Route::middleware(['api', 'throttle:api'])
             ->prefix('api/v1')
             ->as('api.')
             ->group(base_path('routes/api/v1/guest.php'));
 
-        Route::middleware(['api', 'auth:sanctum', 'throttle:api', 'api.locale'])
+        Route::middleware(['api', 'auth:sanctum', 'throttle:api'])
             ->prefix('api/v1')
             ->as('api.')
             ->group(base_path('routes/api/v1/auth.php'));

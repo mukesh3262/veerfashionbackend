@@ -14,6 +14,10 @@ class Banner extends Model
     protected $fillable = [
         'uuid',
         'title',
+        'subtitle',
+        'description',
+        'position',
+        'href',
         'image',
         'is_active',
     ];

@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->uuid();
             $table->string('title');
+            $table->string('subtitle')->nullable();
+            $table->text('description')->nullable();
+            $table->string('href')->nullable();
+            $table->enum('position', ['right', 'left'])->default('right');
             $table->string('image');
             $table->boolean('is_active')->default(true);
             $table->timestamps();

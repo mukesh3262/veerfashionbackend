@@ -25,8 +25,12 @@ class BannerRequest extends FormRequest
     {
         return [
             'title' => ['required'],
+            'subtitle' => ['nullable'],
+            'description' => ['nullable'],
+            'position' => ['nullable'],
+            'href' => ['nullable'],
             'image' => [Rule::requiredIf(!$this->id), 'nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:10240'],
-            'is_active' => ['boolean']
+            'is_active' => ['nullable']
         ];
     }
    

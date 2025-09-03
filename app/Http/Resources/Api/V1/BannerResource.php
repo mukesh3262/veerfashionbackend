@@ -18,8 +18,11 @@ class BannerResource extends JsonResource
         return [
             'id' => $this->uuid,
             'title' => $this->title,
-            'image' => $this->image,
-            'image_url' => $this->image ? Storage::url(config('filesystems.module_paths.banners') . $this->image) : null,
+            'image' => $this->image ? Storage::url(config('filesystems.module_paths.banners') . $this->image) : null,
+            'href' => $this->href,
+            'subtitle' => $this->subtitle,
+            "description" =>$this->description,
+            'position' => $this->position,
         ];
     }
 }

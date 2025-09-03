@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 
 class BannerController extends Controller
 {
-    
     public function banners(){
         $banners = Banner::where('is_active', Banner::ACTIVE)->orderBy('created_at', 'asc')->get();
         $banners = BannerResource::collection($banners);
