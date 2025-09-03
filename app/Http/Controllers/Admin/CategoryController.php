@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CategoryRequest;
 use App\Http\Resources\Admin\CategoryResource;
@@ -56,7 +57,8 @@ class CategoryController extends Controller
             // Category icon
             if ($request->hasFile('category_icon')) {
                 $filename = uniqid('category-icon-') . '.' . $request->category_icon->getClientOriginalExtension();
-                Storage::put(config('filesystems.module_paths.categories') . $filename, $request->category_icon->getContent());
+                $image = Helper::compressImage($request->category_icon, 10);
+                Storage::put(config('filesystems.module_paths.categories') . $filename, $image);
 
                 $updateData['icon'] = $filename;
             }
@@ -106,7 +108,8 @@ class CategoryController extends Controller
                 }
 
                 $filename = uniqid('category-icon-') . '.' . $request->category_icon->getClientOriginalExtension();
-                Storage::put(config('filesystems.module_paths.categories') . $filename, $request->category_icon->getContent());
+                $image = Helper::compressImage($request->category_icon, 10);
+                Storage::put(config('filesystems.module_paths.categories') . $filename, $image);
 
                 $updateData['icon'] = $filename;
             }

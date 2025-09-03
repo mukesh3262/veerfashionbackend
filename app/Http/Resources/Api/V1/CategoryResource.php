@@ -26,8 +26,8 @@ class CategoryResource extends JsonResource
             'icon' => $this->icon,
             'icon_url' => $this->icon_url,
             'primary_id' => $this->id,
-            'min_price' => $minPrice,
-            'max_price' => $maxPrice,
+            'min_price' => '₹' . number_format($minPrice, 2),
+            'max_price' => '₹' . number_format($maxPrice, 2),
             'parent_category' => $this->parentCategory ? [
                 'uuid' => $this->parentCategory?->uuid,
                 'id' => $this->parentCategory?->id,
