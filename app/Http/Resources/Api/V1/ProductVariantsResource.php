@@ -15,6 +15,7 @@ class ProductVariantsResource extends JsonResource
     public function toArray(Request $request): array
     {
         $this->load('images');
+        $variantImages= ProductVariantImageResource::collection($this->whenLoaded('images'))->resolve();
         return [
             'id' => $this->uuid,
             'product_id' => $this->product_id,
@@ -23,7 +24,7 @@ class ProductVariantsResource extends JsonResource
             'attributes' => json_decode($this->attributes, true),
             'price' => $this->price,
             'stock' => $this->stock,
-            'variant_images' => ProductVariantImageResource::collection($this->whenLoaded('images'))->resolve(),
+            'variant_images' => array_map(fn($image) => $image['image_url'], $variantImages),
         ];
     }
 }

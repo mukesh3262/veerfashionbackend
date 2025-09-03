@@ -26,11 +26,12 @@ class ProductController extends Controller
             ->get()
             ->map(function ($category) {
                 return [
-                    'label' => $category->name,
-                    'options' => $category->subcategories->map(function ($subcategory) {
+                    'id' => $category->id,
+                    'category' => $category->name,
+                    'sub_categories' => $category->subcategories->map(function ($subcategory) {
                         return [
-                            'label' => $subcategory->name,
-                            'value' => $subcategory->id,
+                            'id' => $subcategory->id,
+                            'name' => $subcategory->name,
                         ];
                     })->toArray(),
                 ];
