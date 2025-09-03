@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\V1\ProductNewArrival;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
@@ -68,13 +69,13 @@ class ProductController extends Controller
 
     public function newArrival(){
         $products = Product::where('is_active', true)
-            ->with(['variants', 'images', 'category'])
+            ->with('images')
             ->orderBy('created_at', 'desc')
             ->limit(6)
             ->get();
             
         return response()->json([
-            'data' => ProductResource::collection($products),
+            'data' => ProductNewArrival::collection($products),
         ]);
     }
 }
