@@ -1,14 +1,13 @@
 import Breadcrumb from '@/Components/Admin/Breadcrumb';
 import Switch from '@/Components/Admin/CustomTable/Partials/Switch';
 import { Permission } from '@/constants/Permission';
+import { sweetAlert } from '@/helpers/sweet-alert';
 import AuthenticatedLayout from '@/Layouts/Admin/AuthenticatedLayout';
 import { processDate } from '@/utils/admin/dateUtils';
 import { formatCurrency } from '@/utils/formatCurrency';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { Eye } from 'lucide-react';
-import { sweetAlert } from '@/helpers/sweet-alert';
 import { useSelector } from 'react-redux';
-import { router } from '@inertiajs/react';
 
 export default function ProductDetail({ auth, product, success, error, uuid }) {
     const { theme } = useSelector((state) => state.themeConfig);
@@ -27,7 +26,6 @@ export default function ProductDetail({ auth, product, success, error, uuid }) {
             theme,
         );
     };
-
 
     return (
         <AuthenticatedLayout
@@ -173,114 +171,123 @@ export default function ProductDetail({ auth, product, success, error, uuid }) {
                             </div>
                         </div>
 
-                        {/* Variant Information */}
-                        <div className="mb-6 mt-10 flex items-center justify-between">
-                            <h5 className="text-xl font-bold text-gray-600 dark:text-gray-400">
-                                Variant Information
-                            </h5>
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-6">
-                            {product?.variants?.map((variant) => (
-                                <div
-                                    key={variant.id}
-                                    className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:bg-gray-800"
-                                >
-                                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                        <div>
-                                            <h6 className="text-sm text-gray-500">
-                                                SKU
-                                            </h6>
-                                            <p className="text-lg font-semibold">
-                                                {variant?.sku}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <h6 className="text-sm text-gray-500">
-                                                Brand
-                                            </h6>
-                                            <p className="font-medium">
-                                                {variant?.brand}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <h6 className="text-sm text-gray-500">
-                                                Attributes
-                                            </h6>
-                                            <ul className="list-disc pl-6 font-medium">
-                                                {Object.entries(
-                                                    variant?.attributes || {},
-                                                ).map(([key, value]) => (
-                                                    <li
-                                                        key={key}
-                                                    >{`${key.charAt(0).toUpperCase()}${key.slice(1)}: ${value}`}</li>
-                                                ))}
-                                            </ul>
-                                        </div>
-
-                                        <div>
-                                            <h6 className="text-sm text-gray-500">
-                                                Price
-                                            </h6>
-                                            <p className="text-lg font-semibold text-indigo-600">
-                                                {formatCurrency(variant?.price)}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <h6 className="text-sm text-gray-500">
-                                                Stock
-                                            </h6>
-                                            <p className="font-medium">
-                                                {variant?.stock}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    {/* Variant Images */}
-                                    {variant?.variant_images?.length > 0 && (
-                                        <div className="mt-6">
-                                            <h6 className="mb-3 text-sm text-gray-500">
-                                                Variant Images
-                                            </h6>
-                                            <div className="grid grid-cols-2 gap-4 md:grid-cols-10">
-                                                {variant.variant_images.map(
-                                                    (img) => (
-                                                        <div
-                                                            key={img.id}
-                                                            className="group relative aspect-square overflow-hidden rounded-lg border border-gray-200 shadow-sm"
-                                                        >
-                                                            <img
-                                                                src={
-                                                                    img.image_url
-                                                                }
-                                                                alt={
-                                                                    img.image ||
-                                                                    'variant'
-                                                                }
-                                                                className="h-full w-full object-contain p-2 transition-transform group-hover:scale-105"
-                                                            />
-                                                            <a
-                                                                href={
-                                                                    img.image_url
-                                                                }
-                                                                target="_blank"
-                                                                rel="noreferrer"
-                                                                className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition group-hover:opacity-100"
-                                                            >
-                                                                <Eye className="h-6 w-6 text-white" />
-                                                            </a>
-                                                        </div>
-                                                    ),
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
+                        {product?.variants?.length > 0 && (
+                            <>
+                                <div className="mb-6 mt-10 flex items-center justify-between">
+                                    <h5 className="text-xl font-bold text-gray-600 dark:text-gray-400">
+                                        Variant Information
+                                    </h5>
                                 </div>
-                            ))}
-                        </div>
+
+                                <div className="grid grid-cols-1 gap-6">
+                                    {product?.variants?.map((variant) => (
+                                        <div
+                                            key={variant.id}
+                                            className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:bg-gray-800"
+                                        >
+                                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                                <div>
+                                                    <h6 className="text-sm text-gray-500">
+                                                        SKU
+                                                    </h6>
+                                                    <p className="text-lg font-semibold">
+                                                        {variant?.sku}
+                                                    </p>
+                                                </div>
+
+                                                <div>
+                                                    <h6 className="text-sm text-gray-500">
+                                                        Brand
+                                                    </h6>
+                                                    <p className="font-medium">
+                                                        {variant?.brand}
+                                                    </p>
+                                                </div>
+
+                                                <div>
+                                                    <h6 className="text-sm text-gray-500">
+                                                        Attributes
+                                                    </h6>
+                                                    <ul className="list-disc pl-6 font-medium">
+                                                        {Object.entries(
+                                                            variant?.attributes ||
+                                                                {},
+                                                        ).map(
+                                                            ([key, value]) => (
+                                                                <li
+                                                                    key={key}
+                                                                >{`${key.charAt(0).toUpperCase()}${key.slice(1)}: ${value}`}</li>
+                                                            ),
+                                                        )}
+                                                    </ul>
+                                                </div>
+
+                                                <div>
+                                                    <h6 className="text-sm text-gray-500">
+                                                        Price
+                                                    </h6>
+                                                    <p className="text-lg font-semibold text-indigo-600">
+                                                        {formatCurrency(
+                                                            variant?.price,
+                                                        )}
+                                                    </p>
+                                                </div>
+
+                                                <div>
+                                                    <h6 className="text-sm text-gray-500">
+                                                        Stock
+                                                    </h6>
+                                                    <p className="font-medium">
+                                                        {variant?.stock}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {/* Variant Images */}
+                                            {variant?.variant_images?.length >
+                                                0 && (
+                                                <div className="mt-6">
+                                                    <h6 className="mb-3 text-sm text-gray-500">
+                                                        Variant Images
+                                                    </h6>
+                                                    <div className="grid grid-cols-2 gap-4 md:grid-cols-10">
+                                                        {variant.variant_images.map(
+                                                            (img) => (
+                                                                <div
+                                                                    key={img.id}
+                                                                    className="group relative aspect-square overflow-hidden rounded-lg border border-gray-200 shadow-sm"
+                                                                >
+                                                                    <img
+                                                                        src={
+                                                                            img.image_url
+                                                                        }
+                                                                        alt={
+                                                                            img.image ||
+                                                                            'variant'
+                                                                        }
+                                                                        className="h-full w-full object-contain p-2 transition-transform group-hover:scale-105"
+                                                                    />
+                                                                    <a
+                                                                        href={
+                                                                            img.image_url
+                                                                        }
+                                                                        target="_blank"
+                                                                        rel="noreferrer"
+                                                                        className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition group-hover:opacity-100"
+                                                                    >
+                                                                        <Eye className="h-6 w-6 text-white" />
+                                                                    </a>
+                                                                </div>
+                                                            ),
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

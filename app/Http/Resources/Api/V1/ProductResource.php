@@ -14,15 +14,26 @@ class ProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-         $productImages = ProductImageResource::collection($this->whenLoaded('images'))->resolve();
+        $productImages = [];
+        $price = 0;
+        $variants = ProductVariantsResource::collection($this->whenLoaded('variants'))->resolve();
+        if (!empty($variants)) {
+            $price = $variants[0]['price'];
+            $productImages = $variants[0]['variant_images'] ?? [];
+        } else {
+            $price = $this->base_price;
+            $imageCollection = ProductImageResource::collection($this->whenLoaded('images'))->resolve();
+            $productImages = array_map(fn($image) => $image['image_url'], $imageCollection);
+        }
+        
         return [
             'id' => $this->uuid,
             'code' => $this->code,
             'name' => $this->name,
             'description' => $this->description,
             'category_id' => $this->category_id,
-            'price' =>  '₹' . number_format($this->base_price, 2),
-            'product_images' =>  array_map(fn($image) => $image['image_url'], $productImages),
+            'price' =>  '₹' . number_format($price, 2),
+            'product_images' =>  $productImages,
             'variants' => ProductVariantsResource::collection($this->whenLoaded('variants'))->resolve(),
             // 'category' => CategoryResource::make($this->whenLoaded('category'))->resolve(),
         ];
