@@ -22,52 +22,59 @@ export default function ForgotPassword({ success, error, uuid }) {
         <GuestLayout success={success} error={error} uuid={uuid}>
             <Head title="Forgot Password" />
 
-            <div className="relative flex w-full items-center justify-center lg:w-1/2">
-                <div className="max-w-[480px] p-5 md:p-10">
-                    <h2 className="mb-3 text-3xl font-bold">Forgot Password</h2>
-
-                    <p className="mb-7 w-[500px]">
-                        Forgot your password? No worries! You can easily reset
-                        it here.
-                    </p>
-
-                    <form className="space-y-5" onSubmit={handleSubmit}>
-                        <div>
-                            <InputLabel htmlFor="email" value="Email" />
-
-                            <TextInput
-                                id="email"
-                                type="email"
-                                name="email"
-                                value={data.email}
-                                placeholder="Enter E-Mail Address"
-                                isFocused={true}
-                                onChange={(e) =>
-                                    setData('email', e.target.value)
-                                }
-                            />
-
-                            <InputError
-                                message={errors.email}
-                                className="mt-2"
-                            />
-                        </div>
-
-                        <PrimaryButton className="w-full" disabled={processing}>
-                            Email Password Reset Link
-                        </PrimaryButton>
-
-                        <p>
-                            <Link
-                                href={route('admin.login')}
-                                className="font-bold text-primary hover:underline"
-                            >
-                                Sign In Instead
-                            </Link>
-                        </p>
-                    </form>
-                </div>
+            {/* Form Card */}
+            <div className="text-center mb-6">
+                <h2 className="text-3xl font-extrabold text-yellow-400 drop-shadow-md">
+                    Forgot Password?
+                </h2>
+                <p className="text-gray-200 mt-2">
+                    No worries! Enter your email and we’ll send you a reset link.
+                </p>
             </div>
+
+            <form className="space-y-5" onSubmit={handleSubmit}>
+                {/* Email */}
+                <div>
+                    <InputLabel
+                        htmlFor="email"
+                        value="Email"
+                        className="text-white"
+                    />
+                    <TextInput
+                        id="email"
+                        type="email"
+                        name="email"
+                        value={data.email}
+                        placeholder="Enter your email"
+                        isFocused={true}
+                        onChange={(e) => setData('email', e.target.value)}
+                        className="w-full"
+                    />
+                    <InputError
+                        message={errors.email}
+                        className="mt-2 text-yellow-300"
+                    />
+                </div>
+
+                {/* Submit */}
+                <PrimaryButton
+                    className="w-full bg-yellow-400 text-black font-bold py-3 rounded-xl hover:bg-yellow-300 transition"
+                    disabled={processing}
+                >
+                    Email Password Reset Link
+                </PrimaryButton>
+
+                {/* Back to Sign In */}
+                <p className="text-gray-200 text-sm mt-4">
+                    Remember your password?{' '}
+                    <Link
+                        href={route('admin.login')}
+                        className="font-semibold text-yellow-400 hover:underline"
+                    >
+                        Sign In Instead
+                    </Link>
+                </p>
+            </form>
         </GuestLayout>
     );
 }

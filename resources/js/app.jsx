@@ -41,7 +41,7 @@ createInertiaApp({
             <Provider store={store}>
                 <QueryClientProvider client={queryClient}>
                     {/* React Query Devtools */}
-                    <ReactQueryDevtools initialIsOpen={false} />
+                    {/* <ReactQueryDevtools initialIsOpen={false} /> */}
 
                     {/* App */}
                     <BrowserRouter>
