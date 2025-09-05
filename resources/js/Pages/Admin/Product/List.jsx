@@ -182,7 +182,7 @@ export default function ProductList({
                         </h5>
 
                         <div className="flex items-center gap-2">
-                            <CheckAbility
+                            {/* <CheckAbility
                                     auth={auth}
                                     permission={Permission.PRODUCT_ADD}
                                 >
@@ -192,7 +192,7 @@ export default function ProductList({
                                 >
                                     Import Products
                                 </Link>
-                            </CheckAbility>
+                            </CheckAbility> */}
                             
                             <CheckAbility
                                 auth={auth}
