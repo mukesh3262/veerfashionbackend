@@ -26,11 +26,11 @@ export default function Login({ canResetPassword, success, error, uuid }) {
             <Head title="Log in" />
 
             {/* Heading */}
-            <div className="text-center mb-6">
+            <div className="mb-6 text-center">
                 <h2 className="text-3xl font-extrabold text-yellow-400 drop-shadow-md">
                     Welcome Back 👋
                 </h2>
-                <p className="text-gray-200 mt-2">
+                <p className="mt-2 text-gray-200">
                     Sign in to manage your fashion admin panel
                 </p>
             </div>
@@ -39,7 +39,11 @@ export default function Login({ canResetPassword, success, error, uuid }) {
             <form onSubmit={handleSubmit} className="space-y-5">
                 {/* Email */}
                 <div>
-                    <InputLabel htmlFor="email" value="Email" className="text-white" />
+                    <InputLabel
+                        htmlFor="email"
+                        value="Email"
+                        className="text-white"
+                    />
                     <TextInput
                         id="email"
                         type="email"
@@ -51,12 +55,19 @@ export default function Login({ canResetPassword, success, error, uuid }) {
                         onChange={(e) => setData('email', e.target.value)}
                         className="w-full"
                     />
-                    <InputError message={errors.email} className="mt-2 text-yellow-300" />
+                    <InputError
+                        message={errors.email}
+                        className="mt-2 text-yellow-300"
+                    />
                 </div>
 
                 {/* Password */}
                 <div>
-                    <InputLabel htmlFor="password" value="Password" className="text-white" />
+                    <InputLabel
+                        htmlFor="password"
+                        value="Password"
+                        className="text-white"
+                    />
                     <TextInput
                         id="password"
                         type="password"
@@ -67,7 +78,10 @@ export default function Login({ canResetPassword, success, error, uuid }) {
                         onChange={(e) => setData('password', e.target.value)}
                         className="w-full"
                     />
-                    <InputError message={errors.password} className="mt-2 text-yellow-300" />
+                    <InputError
+                        message={errors.password}
+                        className="mt-2 text-yellow-300"
+                    />
                 </div>
 
                 {/* Remember & Forgot */}
@@ -76,7 +90,9 @@ export default function Login({ canResetPassword, success, error, uuid }) {
                         <Checkbox
                             name="remember"
                             checked={data.remember}
-                            onChange={(e) => setData('remember', e.target.checked)}
+                            onChange={(e) =>
+                                setData('remember', e.target.checked)
+                            }
                         />
                         <span>Remember me</span>
                     </label>
@@ -93,12 +109,28 @@ export default function Login({ canResetPassword, success, error, uuid }) {
 
                 {/* Sign In */}
                 <PrimaryButton
-                    className="w-full bg-yellow-400 text-black font-bold py-3 rounded-xl hover:bg-yellow-300 transition"
+                    className="w-full rounded-xl bg-yellow-400 py-3 font-bold text-black transition hover:bg-yellow-300"
                     disabled={processing}
                 >
                     Sign In
                 </PrimaryButton>
             </form>
+
+            {/* Animated Redirect Button */}
+            <div className="mt-6 text-center">
+                <a
+                    href={import.meta.env.VITE_FRONTEND_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block bg-black text-yellow-400 border-2 border-yellow-400 font-semibold px-4 py-1 rounded-xl text-xs
+                            hover:bg-yellow-400 hover:text-black transition duration-300
+                            animate-[pulseGlow_2s_ease-in-out_infinite]"
+                >
+                    🌐 Go to Website
+                </a>
+            </div>
+            
         </GuestLayout>
     );
 }
+

@@ -31,7 +31,7 @@ export default function Dashboard({ auth, data, success, error, uuid }) {
                         <div className="grid gap-8 text-sm font-bold text-[#515365] sm:grid-cols-2">
                             <div>
                                 <div>
-                                    <div>Active Users</div>
+                                    <div>Active Products</div>
                                     <div className="text-lg text-[#f8538d]">
                                         {data?.productsCount?.activeCount ?? 0}
                                     </div>
@@ -40,7 +40,7 @@ export default function Dashboard({ auth, data, success, error, uuid }) {
 
                             <div>
                                 <div>
-                                    <div>Inactive Users</div>
+                                    <div>Inactive Products</div>
                                     <div className="text-lg text-[#f8538d]">
                                         {data?.productsCount?.inactiveCount ?? 0}
                                     </div>
