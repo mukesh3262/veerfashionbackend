@@ -52,8 +52,7 @@ export default function ProductAddEdit({
             })) ?? [],
         product_images: [], // only new files
         deleted_product_images: [], // ids of deleted images
-    }); 
-
+    });
 
     const [selectedCategory, setSelectedCategory] = useState(
         assignedCategory ?? null,
@@ -79,6 +78,18 @@ export default function ProductAddEdit({
                 variant_images: [],
             },
         ]);
+    };
+
+    const copyVariant = (index) => {
+        const variantToCopy = data.variants[index];
+
+        // Make a deep copy so we don't accidentally mutate original
+        const copiedVariant = JSON.parse(JSON.stringify(variantToCopy));
+
+        // If you want to reset some fields like SKU, uncomment below:
+        // copiedVariant.sku = '';
+
+        setData('variants', [...data.variants, copiedVariant]);
     };
 
     const removeVariant = (index) => {
@@ -436,13 +447,23 @@ export default function ProductAddEdit({
                                             className="mt-2"
                                         />
                                     </div>
-                                    <button
-                                        type="button"
-                                        onClick={() => removeVariant(index)}
-                                        className="mt-2 text-sm text-red-500"
-                                    >
-                                        Remove Variant
-                                    </button>
+                                    <div className="mt-3 flex items-center gap-4">
+                                        <button
+                                            type="button"
+                                            onClick={() => removeVariant(index)}
+                                            className="flex items-center text-sm font-medium text-red-600 transition hover:text-red-800"
+                                        >
+                                            ✕ Remove
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            onClick={() => copyVariant(index)}
+                                            className="flex items-center text-sm font-medium text-blue-600 transition hover:text-blue-800"
+                                        >
+                                            📄 Copy
+                                        </button>
+                                    </div>
                                 </div>
                             ))}
 

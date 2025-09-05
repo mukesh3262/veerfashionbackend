@@ -17,14 +17,23 @@ class PriceFilterPipeline
 
     public function handle($query, $next)
     {
-        if ($this->min !== null) {
-            $query->where('base_price', '>=', $this->min);
-        }
+        return $next(
+            $query->where(function ($q) {
+                $q->whereHas('variants', function ($query) {
+                    if ($this->min !== null) {
+                        $query->where('price', '>=', $this->min);
+                    }
 
-        if ($this->max !== null) {
-            $query->where('base_price', '<=', $this->max);
-        }
+                    if ($this->max !== null) {
+                        $query->where('price', '<=', $this->max);
+                    }
+                });
 
-        return $next($query);
+                // include products without variants
+                if ($this->min === null && $this->max === null) {
+                    $q->orDoesntHave('variants');
+                }
+            })
+        );
     }
 }

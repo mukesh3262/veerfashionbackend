@@ -56,7 +56,7 @@ class ProductController extends Controller
             ])
             ->thenReturn()
             ->paginate(12);
-    
+
         return response()->json([
             'data' => ProductResource::collection($products),
             'pagination' => [

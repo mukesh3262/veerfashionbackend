@@ -23,7 +23,7 @@ class Product extends Model
         parent::boot();
 
         static::creating(function ($product) {
-            $latestProduct = self::orderBy('id', 'desc')->first();
+            $latestProduct = self::withTrashed()->orderBy('id', 'desc')->first();
 
             if ($latestProduct && $latestProduct->code) {
                 // extract number from last code
@@ -36,7 +36,6 @@ class Product extends Model
             $product->code = 'PROD-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
         });
     }
-    
     /**
      * Returns an array of unique identifiers for the model.
      *
