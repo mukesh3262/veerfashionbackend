@@ -1,42 +1,85 @@
-# Base PHP image with Composer
-FROM php:8.2-apache
-
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    git \
-    curl \
-    nodejs \
-    npm \
-    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
-
-# Install Composer
-COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
+# =========================
+# Stage 1: Build PHP / Laravel
+# =========================
+FROM php:8.3-fpm AS laravel-builder
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy all application files first (including artisan)
-COPY . .
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    curl \
+    libzip-dev \
+    libonig-dev \
+    npm \
+    && docker-php-ext-install pdo_mysql zip mbstring
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Install Node dependencies and build React
-RUN npm install && npm run build
+# Create non-root user
+RUN useradd -m appuser
+USER appuser
+
+# Copy project files
+COPY --chown=appuser:appuser . .
+
+# Copy .env example and generate APP_KEY if missing
+RUN cp .env.example .env || true
+RUN php artisan key:generate
+
+# Install PHP dependencies without running scripts yet
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --no-scripts
+
+# Manually run artisan commands
+RUN php artisan package:discover
+RUN php artisan config:cache
+RUN php artisan route:cache
+
+# =========================
+# Stage 2: Build React frontend
+# =========================
+FROM node:20 AS react-builder
+
+WORKDIR /var/www/html
+
+# Copy package.json and yarn.lock/npm package-lock.json
+COPY package*.json ./
+COPY --from=laravel-builder /var/www/html /var/www/html
+
+# Install Node dependencies
+RUN npm install
+
+# Build React assets
+RUN npm run build
+
+# =========================
+# Stage 3: Final PHP runtime
+# =========================
+FROM php:8.3-fpm
+
+WORKDIR /var/www/html
+
+# Copy PHP/Laravel files from builder
+COPY --from=laravel-builder /var/www/html /var/www/html
+
+# Copy React build
+COPY --from=react-builder /var/www/html/build /var/www/html/public/build
+
+# Install PHP extensions
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    libonig-dev \
+    && docker-php-ext-install pdo_mysql zip mbstring
 
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose Apache port
-EXPOSE 80
+# Expose port
+EXPOSE 9000
 
-# Start Apache
-CMD ["apache2-foreground"]
+# Start PHP-FPM
+CMD ["php-fpm"]
