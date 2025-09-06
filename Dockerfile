@@ -17,28 +17,22 @@ RUN apt-get update && apt-get install -y \
     npm \
     && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
 
-# Install Composer (from composer official image)
+# Install Composer
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy composer files first (for caching)
-COPY composer.json composer.lock ./
+# Copy all application files first (including artisan)
+COPY . .
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
-# Copy package.json separately for caching
-COPY package*.json ./
-
-# Install Node dependencies and build React admin
+# Install Node dependencies and build React
 RUN npm install && npm run build
 
-# Copy the rest of the application
-COPY . .
-
-# Set permissions
+# Set permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Expose Apache port
